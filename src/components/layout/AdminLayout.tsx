@@ -12,9 +12,11 @@ function AdminLayout() {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="sidebar-glow w-64 bg-gray-900 text-white p-6 rounded-b-xl rounded-tl-xl my-2 ml-2">
-        <h2 className="text-xl font-bold mb-8">Admin Panel</h2>
-        <nav className="flex flex-col gap-2">
+      <aside className="sidebar-glow sticky top-2 self-start h-[calc(100vh-1rem)] w-64 shrink-0 overflow-y-auto bg-gray-900 text-white rounded-xl my-2 ml-2">
+        <div className="text-xl font-bold mb-8 w-full border-b-2 border-white py-4">
+          <UserNav />
+        </div>
+        <nav className="flex flex-col gap-2 p-3">
           <NavLink to="/admin" end className={navLinkClass}>
             Dashboard
           </NavLink>
@@ -32,16 +34,11 @@ function AdminLayout() {
           </NavLink>
         </nav>
       </aside>
-      <div className="w-full h-screen pr-2">
-        <nav className="bg-gray-900 px-4 text-white rounded-r-xl max-h-20 h-full my-2 flex items-center justify-end w-full">
-          <UserNav />
-        </nav>
 
-        {/* Main Content */}
-        <main className="flex-1 p-8">
-          <Outlet />
-        </main>
-      </div>
+      {/* Main */}
+      <main className="flex-1 min-w-0 p-8">
+        <Outlet />
+      </main>
     </div>
   );
 }

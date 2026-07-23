@@ -4,7 +4,7 @@ import {
   SUBJECT_CATEGORIES,
   type Subject,
   type SubjectFormValues,
-} from "../lib/typeSubject";
+} from "../lib/type-subject";
 import { Modal } from "./modal";
 
 interface SubjectFormModalProps {

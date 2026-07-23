@@ -133,7 +133,7 @@ export default function SubjectsPage() {
 
   return (
     <div className="h-full">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 py-4 sm:px-6 lg:px-8">
         {/* Sahifa sarlavhasi */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

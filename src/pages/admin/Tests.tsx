@@ -1,8 +1,15 @@
 // src/pages/admin/tests/TestsPage.tsx
 import { useMemo, useState } from "react";
 import { ChevronDown, FileQuestion, Plus, Search } from "lucide-react";
-import { TEST_FORMATS, TEST_STATUSES, type Test, type TestFormat, type TestFormValues, type TestStatus } from "@/widgets/test/lib/test-types";
-import { mockTests } from "@/widgets/test/lib/mock-test-data";
+import {
+  TEST_FORMATS,
+  TEST_STATUSES,
+  type Test,
+  type TestFormat,
+  type TestFormValues,
+  type TestStatus,
+} from "@/widgets/test/lib/test-types";
+import { mockTests } from "@/widgets/test/lib/mock-test-data-test";
 import { mockSubjects } from "@/widgets/subject";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
@@ -23,9 +30,13 @@ export default function TestsPage() {
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
-      const matchesSearch = t.title.toLowerCase().includes(search.trim().toLowerCase());
-      const matchesFormat = formatFilter === "Barchasi" || t.format === formatFilter;
-      const matchesStatus = statusFilter === "Barchasi" || t.status === statusFilter;
+      const matchesSearch = t.title
+        .toLowerCase()
+        .includes(search.trim().toLowerCase());
+      const matchesFormat =
+        formatFilter === "Barchasi" || t.format === formatFilter;
+      const matchesStatus =
+        statusFilter === "Barchasi" || t.status === statusFilter;
       return matchesSearch && matchesFormat && matchesStatus;
     });
   }, [tests, search, formatFilter, statusFilter]);
@@ -37,7 +48,7 @@ export default function TestsPage() {
       review: tests.filter((t) => t.status === "Tekshiruvda").length,
       draft: tests.filter((t) => t.status === "Qoralama").length,
     }),
-    [tests]
+    [tests],
   );
 
   function handleCreate(values: TestFormValues) {
@@ -78,8 +89,8 @@ export default function TestsPage() {
   }
 
   return (
-    <div className="h-full">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="h-full w-full">
+      <div className="mx-auto w-full px-4 py-8 sm:px-6 lg:px-8">
         {/* Sarlavha */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -87,7 +98,8 @@ export default function TestsPage() {
               Testlar
             </h1>
             <p className="mt-1 text-sm text-slate-500">
-              Testlarni yarating, AI yordamida fayldan generatsiya qiling yoki qo'lda tuzing.
+              Testlarni yarating, AI yordamida fayldan generatsiya qiling yoki
+              qo'lda tuzing.
             </p>
           </div>
           <button
@@ -103,9 +115,21 @@ export default function TestsPage() {
         {/* Statistik kartalar */}
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <SummaryCard label="Jami testlar" value={summary.total} />
-          <SummaryCard label="Nashr qilingan" value={summary.published} accent="#3F7D58" />
-          <SummaryCard label="Tekshiruvda" value={summary.review} accent="#C79A3E" />
-          <SummaryCard label="Qoralamalar" value={summary.draft} accent="#64748B" />
+          <SummaryCard
+            label="Nashr qilingan"
+            value={summary.published}
+            accent="#3F7D58"
+          />
+          <SummaryCard
+            label="Tekshiruvda"
+            value={summary.review}
+            accent="#C79A3E"
+          />
+          <SummaryCard
+            label="Qoralamalar"
+            value={summary.draft}
+            accent="#64748B"
+          />
         </div>
 
         {/* Filtrlar */}
