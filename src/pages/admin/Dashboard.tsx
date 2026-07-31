@@ -1,3 +1,3 @@
 export function Dashboard() {
-  return (<>DAshboard</>)
+  return (<>DAshboard salom</>)
 }
