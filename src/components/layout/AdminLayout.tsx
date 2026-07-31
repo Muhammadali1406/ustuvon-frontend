@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import {
   BarChart3,
   BookOpenCheck,
@@ -27,11 +28,43 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/admin/statistics", label: "Statistics", icon: BarChart3 },
 ];
 
+// ---------------------------------------------------------------------------
+// Shared row: icon + label (md va undan katta) + tooltip (md dan kichik, hover)
+// ---------------------------------------------------------------------------
+
+function SidebarRow({
+  icon,
+  label,
+  tone = "default",
+}: {
+  icon: ReactNode;
+  label: string;
+  tone?: "default" | "danger";
+}) {
+  return (
+    <>
+      <span className="shrink-0">{icon}</span>
+      <span className="hidden text-sm md:inline">{label}</span>
+
+      {/* Mobile/collapsed holatda: hover qilinganda chiqadigan tooltip */}
+      <span
+        className={`pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 scale-95 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium opacity-0 shadow-lg transition-all duration-150 group-hover:scale-100 group-hover:opacity-100 md:hidden ${
+          tone === "danger"
+            ? "bg-rose-500 text-white"
+            : "bg-gray-900 text-white"
+        }`}
+      >
+        {label}
+      </span>
+    </>
+  );
+}
+
 function AdminLayout() {
   const location = useLocation();
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `group flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors duration-200 ${
+    `group relative flex items-center justify-center gap-3 rounded-lg px-2 py-2.5 transition-colors duration-200 md:justify-start md:px-4 ${
       isActive
         ? "bg-[#1A5FA8] text-white"
         : "text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -40,62 +73,61 @@ function AdminLayout() {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="sidebar-glow sticky top-2 flex h-[calc(100vh-1rem)] w-64 shrink-0 flex-col overflow-y-auto bg-gray-900 text-white rounded-xl my-2 ml-2">
-        <div className="text-xl font-bold w-full border-b-2 border-white/10 py-4">
+      <aside className="sidebar-glow sticky top-2 flex h-[calc(100vh-1rem)] w-16 shrink-0 flex-col overflow-y-auto overflow-x-hidden bg-gray-900 text-white rounded-xl my-2 ml-2 transition-[width] duration-300 md:w-64">
+        <div className="flex w-full items-center justify-center border-b-2 border-white/10 py-4 md:justify-start md:px-4">
           <UserNav />
         </div>
 
         {/* Main navigation */}
-        <nav className="flex flex-1 flex-col gap-1 p-3">
+        <nav className="flex flex-1 flex-col gap-1 p-2 md:p-3">
           {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className={navLinkClass}>
               {({ isActive }) => (
-                <>
-                  <span
-                    key={isActive ? `active-${location.pathname}` : "idle"}
-                    className={isActive ? "nav-icon-pop" : ""}
-                  >
-                    <Icon
-                      size={18}
-                      className="shrink-0 transition-transform duration-200 group-hover:scale-110"
-                    />
-                  </span>
-                  <span className="text-sm">{label}</span>
-                </>
+                <SidebarRow
+                  label={label}
+                  icon={
+                    <span
+                      key={isActive ? `active-${location.pathname}` : "idle"}
+                      className={isActive ? "nav-icon-pop" : ""}
+                    >
+                      <Icon
+                        size={18}
+                        className="shrink-0 transition-transform duration-200 group-hover:scale-110"
+                      />
+                    </span>
+                  }
+                />
               )}
             </NavLink>
           ))}
         </nav>
 
         {/* Bottom section — always pinned */}
-        <div className="mt-auto flex flex-col gap-1 border-t border-white/10 p-3">
+        <div className="mt-auto flex flex-col gap-1 border-t border-white/10 p-2 md:p-3">
           <NavLink to="/admin/help" className={navLinkClass}>
-            <HelpCircle size={18} className="shrink-0" />
-            <span className="text-sm">Yordam</span>
+            <SidebarRow icon={<HelpCircle size={18} />} label="Yordam" />
           </NavLink>
           <NavLink to="/admin/settings" className={navLinkClass}>
-            <Settings size={18} className="shrink-0" />
-            <span className="text-sm">Sozlamalar</span>
+            <SidebarRow icon={<Settings size={18} />} label="Sozlamalar" />
           </NavLink>
           <button
             type="button"
             onClick={() => {
               // TODO: auth logikaga ulash (token tozalash + /login ga redirect)
             }}
-            className="group flex items-center gap-3 rounded-lg px-4 py-2.5 text-gray-400 transition-colors duration-200 hover:bg-rose-500/10 hover:text-rose-400"
+            className="group relative flex items-center justify-center gap-3 rounded-lg px-2 py-2.5 text-gray-400 transition-colors duration-200 hover:bg-rose-500/10 hover:text-rose-400 md:justify-start md:px-4"
           >
-            <LogOut size={18} className="shrink-0" />
-            <span className="text-sm">Chiqish</span>
+            <SidebarRow icon={<LogOut size={18} />} label="Chiqish" tone="danger" />
           </button>
 
-          <p className="mt-2 px-4 text-[11px] text-gray-600">
+          <p className="mt-2 hidden px-4 text-[11px] text-gray-600 md:block">
             Ustuvon Admin · v1.0.0
           </p>
         </div>
       </aside>
 
       {/* Main */}
-      <main className="flex-1 min-w-0 p-8">
+      <main className="flex-1 min-w-0 p-4 md:p-8">
         <Outlet />
       </main>
 
