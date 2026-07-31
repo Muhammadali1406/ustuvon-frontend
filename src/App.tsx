@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "./components/layout/AdminLayout";
-import { Dashboard } from "./pages/admin/Dashboard";
 import Subjects from "./pages/admin/Subjects";
 import Tests from "./pages/admin/Tests";
 import TestCreate from "./pages/admin/TestCreate";
 import Users from "./pages/admin/Users";
 import Statistics from "./pages/admin/Statistics";
+import Dashboard from "./pages/admin/Dashboard";
 
 function App() {
   return (
