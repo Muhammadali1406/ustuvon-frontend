@@ -1,19 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  CalendarClock,
-  ChevronDown,
-  LayoutGrid,
-  Pencil,
-  Plus,
-  Search,
-  Trash2,
-} from "lucide-react";
-import type {
-  ScheduledTest,
-  Subject,
-  SubjectCategory,
-  SubjectFormValues,
-} from "@/widgets/subject/lib/typeSubject";
+import { ChevronDown, Plus, Search } from "lucide-react";
 import {
   CategoryBadge,
   EmptyState,
@@ -25,6 +11,12 @@ import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
 import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildSubjectsColumns } from "@/widgets/subject/ui/subject-column";
+import type {
+  SubjectFormValues,
+  ScheduledTest,
+  Subject,
+  SubjectCategory,
+} from "@/widgets/subject/lib/type-subject";
 
 type CategoryFilter = SubjectCategory | "Barchasi";
 

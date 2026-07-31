@@ -8,7 +8,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { CalendarClock, Pencil, Trash2 } from "lucide-react";
-import type { Subject } from "../lib/typeSubject";
+import type { Subject } from "../lib/type-subject";
 import { CategoryBadge } from "./category-badge";
 
 interface ColumnActions {

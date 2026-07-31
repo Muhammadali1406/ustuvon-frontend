@@ -1,7 +1,7 @@
 // src/pages/admin/subjects/ScheduleTestModal.tsx
 import { useEffect, useState } from "react";
 import { Modal } from "./modal";
-import type { ScheduledTest, Subject } from "../lib/typeSubject";
+import type { ScheduledTest, Subject } from "../lib/type-subject";
 
 interface ScheduleTestModalProps {
   isOpen: boolean;

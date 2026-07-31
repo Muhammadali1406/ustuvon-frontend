@@ -1,4 +1,4 @@
-import type { SubjectCategory } from "../lib/typeSubject";
+import type { SubjectCategory } from "../lib/type-subject";
 
 const CATEGORY_STYLES: Record<SubjectCategory, string> = {
   "Tabiiy fanlar": "bg-[#12525A]/10 text-[#0D3E44] ring-[#12525A]/20",

@@ -1,7 +1,7 @@
 // src/data/mockSubjects.ts
 // TODO: Backend tayyor bo'lgach bu faylni olib tashlab, API chaqiruvi bilan almashtiring.
 
-import type { Subject } from "./typeSubject";
+import type { Subject } from "./type-subject";
 
 export const mockSubjects: Subject[] = [
   {
