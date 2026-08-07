@@ -6,10 +6,15 @@ import TestCreate from "./pages/admin/TestCreate";
 import Users from "./pages/admin/Users";
 import Statistics from "./pages/admin/Statistics";
 import Dashboard from "./pages/admin/Dashboard";
+import NotFound from "./pages/not-found";
+import LandingPage from "./pages/landing/landing-pages";
 
 function App() {
   return (
     <Routes>
+      {/* Public */}
+      <Route path="/" element={<LandingPage />} />
+
       {/* Admin routes with shared layout */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
@@ -19,6 +24,9 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="statistics" element={<Statistics />} />
       </Route>
+
+      {/* Mos kelmagan yo'llar */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
