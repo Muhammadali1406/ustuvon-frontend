@@ -8,12 +8,16 @@ import Statistics from "./pages/admin/Statistics";
 import Dashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/not-found";
 import LandingPage from "./pages/landing/landing-pages";
+import Register from "./pages/register/register";
+import Login from "./pages/login/login";
 
 function App() {
   return (
     <Routes>
       {/* Public */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Admin routes with shared layout */}
       <Route path="/admin" element={<AdminLayout />}>

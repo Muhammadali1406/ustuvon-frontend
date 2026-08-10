@@ -10,10 +10,10 @@ const SUBJECT_CATALOG = [
 
 export function SubjectCatalog() {
   return (
-    <section id="fanlar" className="bg-[var(--surface-blue)]/50 py-20">
+    <section id="fanlar" className="bg-[#0EBE15]/5 py-20">
       <div className="mx-auto max-w-6xl px-4 md:px-8">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--brand)]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#0EBE15]">
             Fanlar
           </p>
           <h2 className="mt-2 u-font-display text-2xl font-bold text-[var(--ink)] md:text-3xl">
@@ -33,7 +33,7 @@ export function SubjectCatalog() {
               <p className="mt-1 text-sm text-[var(--ink)]/55">
                 {subject.note}
               </p>
-              <p className="mt-4 u-font-mono text-xs font-medium text-[var(--brand)]">
+              <p className="mt-4 u-font-mono text-xs font-medium text-[#0EBE15]">
                 {subject.tests} ta test mavjud
               </p>
             </div>

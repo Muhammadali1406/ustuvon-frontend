@@ -30,14 +30,14 @@ export function AnswerSheetMockup() {
               key={opt.letter}
               className={`flex items-center gap-3 rounded-lg border px-3 py-2 text-sm ${
                 opt.filled
-                  ? "border-[var(--brand)] bg-[var(--surface-blue)] text-[var(--brand-deep)]"
+                  ? "border-[#0EBE15] bg-[#0EBE15]/10 text-[#0EBE15]"
                   : "border-[var(--ink)]/10 text-[var(--ink)]/70"
               }`}
             >
               <span
                 className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold ${
                   opt.filled
-                    ? "bubble-fill border-[var(--brand)] bg-[var(--brand)] text-white"
+                    ? "bubble-fill border-[#0EBE15] bg-[#0EBE15] text-[var(--ink)]"
                     : "border-[var(--ink)]/25 text-[var(--ink)]/40"
                 }`}
               >
@@ -69,25 +69,25 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/20 bg-[var(--surface-blue)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--brand-deep)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#0EBE15]/20 bg-[#0EBE15]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#0EBE15]">
             DTM · IELTS · Milliy Sertifikat · SAT
           </span>
-
+ 
           <h1 className="mt-5 u-font-display text-4xl font-bold leading-[1.08] tracking-tight text-[var(--ink)] md:text-5xl">
-            Imtihon kuni <span className="text-[var(--brand)]">kutilmagan</span>{" "}
+            Imtihon kuni <span className="text-[#0EBE15]">kutilmagan</span>{" "}
             narsa bo'lmasin
           </h1>
-
+ 
           <p className="mt-5 max-w-md text-base leading-relaxed text-[var(--ink)]/65">
             Rasmiy manbalar asosida tuzilgan testlarni haqiqiy imtihon
-            sharoitida ishlang, natijangizni darhol ko'ring va har bir urinishda
-            qanday o'sib borayotganingizni kuzating.
+            sharoitida ishlang, natijangizni darhol ko'ring va har bir
+            urinishda qanday o'sib borayotganingizni kuzating.
           </p>
-
+ 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               to="/register"
-              className="rounded-lg bg-[var(--brand)] px-6 py-3 text-sm font-semibold text-white shadow-sm shadow-[var(--brand)]/25 transition-colors hover:bg-[var(--brand-deep)]"
+              className="rounded-lg bg-[#0EBE15] px-6 py-3 text-sm font-semibold text-[var(--ink)] shadow-sm shadow-[var(--brand)]/25 transition-colors hover:bg-[#03ba09] hover:text-white"
             >
               Bepul boshlash
             </Link>
@@ -98,7 +98,7 @@ export function Hero() {
               Fanlarni ko'rish
             </a>
           </div>
-
+ 
           <div className="mt-10 flex items-center gap-6 border-t border-[var(--ink)]/10 pt-6 text-sm text-[var(--ink)]/70">
             <div>
               <span className="u-font-mono text-lg font-semibold text-[var(--ink)]">
@@ -115,7 +115,7 @@ export function Hero() {
             </div>
           </div>
         </div>
-
+ 
         <AnswerSheetMockup />
       </div>
     </section>

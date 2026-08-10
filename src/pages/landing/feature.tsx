@@ -46,7 +46,7 @@ export function FeatureGrid() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-20 md:px-8">
       <Reveal>
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--brand)]">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#0EBE15]">
           Nega Ustuvon
         </p>
         <h2 className="mt-2 u-font-display text-2xl font-bold text-[var(--ink)] md:text-3xl">
@@ -61,7 +61,7 @@ export function FeatureGrid() {
               key={feature.title}
               className="border-r border-t border-[var(--ink)]/10 p-6"
             >
-              <feature.icon size={20} className="text-[var(--brand)]" />
+              <feature.icon size={20} className="text-[#0EBE15]" />
               <p className="mt-3 u-font-display text-base font-semibold text-[var(--ink)]">
                 {feature.title}
               </p>

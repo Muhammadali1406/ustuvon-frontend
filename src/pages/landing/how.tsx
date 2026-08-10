@@ -29,7 +29,7 @@ export function HowItWorks() {
       className="mx-auto max-w-6xl px-4 py-20 md:px-8"
     >
       <Reveal>
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--brand)]">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[#0EBE15]">
           Jarayon
         </p>
         <h2 className="mt-2 u-font-display text-2xl font-bold text-[var(--ink)] md:text-3xl">
@@ -40,7 +40,7 @@ export function HowItWorks() {
       <Reveal className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step) => (
           <div key={step.number}>
-            <p className="u-font-mono text-sm font-semibold text-[var(--brand)]">
+            <p className="u-font-mono text-sm font-semibold text-[#0EBE15]">
               {step.number}
             </p>
             <p className="mt-2 u-font-display text-base font-semibold text-[var(--ink)]">

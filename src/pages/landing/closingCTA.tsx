@@ -14,7 +14,7 @@ export function ClosingCta() {
         </p>
         <Link
           to="/register"
-          className="mt-8 inline-block rounded-lg bg-[var(--brand)] px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-deep)]"
+          className="mt-8 inline-block rounded-lg bg-[#0EBE15] px-8 py-3.5 text-sm font-semibold text-[var(--ink)] transition-colors hover:bg-[#03ba09] hover:text-white"
         >
           Bepul ro'yxatdan o'tish
         </Link>
