@@ -15,7 +15,7 @@ export function UserNav() {
             {user.surname[0]}
           </div>
         </button>
-        <div className="text-left hidden">
+        <div className="text-left hidden md:block">
           <p className="text-sm font-semibold">
             {user.name} {user.surname}
           </p>
