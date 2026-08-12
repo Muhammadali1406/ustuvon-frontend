@@ -1,6 +1,6 @@
 // src/pages/admin/tests/TestsPage.tsx
 import { useMemo, useState } from "react";
-import { ChevronDown, FileQuestion, Plus, Search } from "lucide-react";
+import { FileQuestion, Plus, Search } from "lucide-react";
 import {
   TEST_FORMATS,
   TEST_STATUSES,
@@ -15,6 +15,8 @@ import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
 import { CreateTestModal } from "@/widgets/test";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
+import { SummaryCard } from "@/widgets/test/ui/summary-card";
+import { SelectFilter } from "@/widgets/test/ui/select-filter";
 
 type FormatFilter = TestFormat | "Barchasi";
 type StatusFilter = TestStatus | "Barchasi";
@@ -204,54 +206,6 @@ export default function TestsPage() {
   );
 }
 
-function SummaryCard({
-  label,
-  value,
-  accent = "#12525A",
-}: {
-  label: string;
-  value: number;
-  accent?: string;
-}) {
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white px-4 py-3">
-      <p className="text-xs font-medium text-slate-500">{label}</p>
-      <p className="mt-1 text-xl font-semibold" style={{ color: accent }}>
-        {value}
-      </p>
-    </div>
-  );
-}
 
-function SelectFilter<T extends string>({
-  value,
-  onChange,
-  allLabel,
-  options,
-}: {
-  value: T | "Barchasi";
-  onChange: (value: string) => void;
-  allLabel: string;
-  options: readonly T[];
-}) {
-  return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="appearance-none rounded-md border border-slate-300 bg-white py-2 pl-3 pr-9 text-sm text-slate-700 focus:border-[#12525A] focus:outline-none focus:ring-1 focus:ring-[#12525A]"
-      >
-        <option value="Barchasi">{allLabel}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        size={14}
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-      />
-    </div>
-  );
-}
+
+
