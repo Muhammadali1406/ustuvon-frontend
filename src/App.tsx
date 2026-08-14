@@ -15,6 +15,8 @@ import UserSubjects from "./pages/user/user-subject";
 import UserResults from "./pages/user/user-result";
 import UserProfile from "./pages/user/user-profile";
 import NotFound from "./pages/not-found";
+import TestRules from "./pages/user/test-rule";
+import SubjectDetail from "./pages/user/user-subject-detail";
 
 function App() {
   return (
@@ -38,6 +40,11 @@ function App() {
       <Route path="/app" element={<UserLayout />}>
         <Route index element={<Home />} />
         <Route path="subjects" element={<UserSubjects />} />
+        <Route path="subjects/:subjectId" element={<SubjectDetail />} />
+        <Route
+          path="subjects/:subjectId/tests/:testId"
+          element={<TestRules />}
+        />
         <Route path="results" element={<UserResults />} />
         <Route path="profile" element={<UserProfile />} />
       </Route>

@@ -6,19 +6,18 @@ import {
   BEST_RESULTS,
   DEMO_USER,
   INITIAL_SUBJECT_COUNT,
-  QUICK_STATS,
   RECENT_RESULTS,
-  SUBJECTS,
 } from "@/widgets/user-home/hook/demo-data";
 import {
   percentTone,
   StatChip,
   SubjectCard,
 } from "@/widgets/user-home/ui/presentational-pieces";
+import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
 
 export default function Home() {
   const [showAllSubjects, setShowAllSubjects] = useState(false);
-
+ 
   const firstName = DEMO_USER.fullName.split(" ")[0];
   const today = useMemo(
     () =>
@@ -29,11 +28,11 @@ export default function Home() {
       }),
     [],
   );
-
+ 
   const visibleSubjects = showAllSubjects
-    ? SUBJECTS
-    : SUBJECTS.slice(0, INITIAL_SUBJECT_COUNT);
-
+    ? SUBJECT_CATALOG
+    : SUBJECT_CATALOG.slice(0, INITIAL_SUBJECT_COUNT);
+ 
   return (
     <div className="space-y-8">
       {/* Greeting */}
@@ -44,21 +43,21 @@ export default function Home() {
           </h1>
           <p className="mt-1 text-sm text-slate-500">{today}</p>
         </div>
-
+ 
         <div className="flex flex-wrap gap-3">
           <StatChip
             icon={<Target size={16} />}
             label="Ishlangan testlar"
-            value={`${QUICK_STATS.testsTaken} ta`}
+            value={`${DEMO_USER.testsTaken} ta`}
           />
           <StatChip
             icon={<Sparkles size={16} />}
             label="O'rtacha ball"
-            value={`${QUICK_STATS.avgScore}%`}
+            value={`${DEMO_USER.avgScore}%`}
           />
         </div>
       </div>
-
+ 
       {/* Subjects */}
       <section>
         <div className="flex items-center justify-between">
@@ -70,14 +69,14 @@ export default function Home() {
             Barchasi
           </Link>
         </div>
-
+ 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {visibleSubjects.map((subject) => (
             <SubjectCard key={subject.id} subject={subject} />
           ))}
         </div>
-
-        {SUBJECTS.length > INITIAL_SUBJECT_COUNT && (
+ 
+        {SUBJECT_CATALOG.length > INITIAL_SUBJECT_COUNT && (
           <button
             type="button"
             onClick={() => setShowAllSubjects((v) => !v)}
@@ -91,7 +90,7 @@ export default function Home() {
           </button>
         )}
       </section>
-
+ 
       {/* Recent results */}
       <section>
         <div className="flex items-center justify-between">
@@ -105,7 +104,7 @@ export default function Home() {
             Barchasi
           </Link>
         </div>
-
+ 
         <div className="mt-4 divide-y divide-black/5 rounded-xl border border-black/8 bg-white">
           {RECENT_RESULTS.map((result) => (
             <div key={result.id} className="flex items-center gap-3 px-4 py-3">
@@ -115,9 +114,7 @@ export default function Home() {
                 </p>
                 <p className="truncate text-xs text-slate-500">{result.test}</p>
               </div>
-              <span
-                className={`text-sm font-semibold ${percentTone(result.percent)}`}
-              >
+              <span className={`text-sm font-semibold ${percentTone(result.percent)}`}>
                 {result.percent}%
               </span>
               <span className="hidden shrink-0 text-xs text-slate-400 sm:block">
@@ -127,13 +124,13 @@ export default function Home() {
           ))}
         </div>
       </section>
-
+ 
       {/* Best results */}
       <section>
         <h2 className="text-base font-semibold text-slate-900">
           Eng yaxshi natijalarim
         </h2>
-
+ 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {BEST_RESULTS.map((result, index) => (
             <div
@@ -155,9 +152,7 @@ export default function Home() {
               </p>
               <p className="text-xs text-slate-500">{result.test}</p>
               <div className="mt-2 flex items-center justify-between">
-                <span
-                  className={`text-lg font-semibold ${percentTone(result.percent)}`}
-                >
+                <span className={`text-lg font-semibold ${percentTone(result.percent)}`}>
                   {result.percent}%
                 </span>
                 <span className="text-xs text-slate-400">#{index + 1}</span>

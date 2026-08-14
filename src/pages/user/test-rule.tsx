@@ -1,0 +1,37 @@
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft, Volume2 } from "lucide-react";
+import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
+
+export default function TestRules() {
+  const { subjectId, testId } = useParams<{
+    subjectId: string;
+    testId: string;
+  }>();
+  const subject = SUBJECT_CATALOG.find((s) => s.id === subjectId);
+
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E7F8E8] text-[#0B8E0F]">
+        <Volume2 size={20} />
+      </span>
+      <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-[#0B8E0F]">
+        Qoidalar ekrani
+      </p>
+      <h1 className="mt-2 text-xl font-semibold text-slate-900">
+        {subject ? `${subject.name} — ` : ""}
+        {testId} tez orada
+      </h1>
+      <p className="mt-2 max-w-sm text-sm text-slate-500">
+        Bu yerda testni boshlashdan oldin 30–60 soniyalik ovozli qoidalar
+        o'qiladi va faqat tinglab bo'lgach "Boshlash" tugmasi faollashadi.
+      </p>
+      <Link
+        to={subject ? `/app/subjects/${subject.id}` : "/app/subjects"}
+        className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[#0B8E0F] hover:underline"
+      >
+        <ArrowLeft size={14} />
+        Orqaga qaytish
+      </Link>
+    </div>
+  );
+}
