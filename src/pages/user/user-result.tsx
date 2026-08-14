@@ -179,7 +179,7 @@ export default function UserResults() {
               />
               <Tooltip
                 contentStyle={{ borderRadius: 8, borderColor: "#E2E8F0", fontSize: 12 }}
-                formatter={(value: number) => [`${value}%`, "Natija"]}
+                formatter={(value: any) => [`${value}%`, "Natija"]}
               />
               <Area
                 type="monotone"
