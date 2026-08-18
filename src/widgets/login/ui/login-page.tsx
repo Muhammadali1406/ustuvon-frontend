@@ -57,7 +57,7 @@ export default function LoginPage() {
               htmlFor="identifier"
               className="text-xs text-slate-500"
             >
-              Telefon
+              Telefon yoki email
             </label>
             <div className="relative mt-1">
               <Phone
@@ -72,8 +72,6 @@ export default function LoginPage() {
                 onChange={(e) => setField("identifier", e.target.value)}
                 placeholder="+998 90 123 45 67"
                 autoComplete="username"
-                maxLength={13}
-                minLength={13}
                 className={fieldClasses(Boolean(errors.identifier))}
               />
             </div>

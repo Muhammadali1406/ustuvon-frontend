@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { isValidPassword } from "../hook/utils";
 import { CheckCircle2, KeyRound } from "lucide-react";
 import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
+import { isValidPassword } from "@/components/lib/pasword-validators";
 
 export default function Password() {
   const [passwordStep, setPasswordStep] = useState<"form" | "verify" | "done">(
