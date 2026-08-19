@@ -2,22 +2,66 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { api } from "@/request/api";
-import { links } from "@/request/links";
-import { secureStorage } from "@/request/secure-storage";
+
 import {
   isValidEmail,
   isValidPassword,
   isValidPhone,
   normalizePhone,
 } from "@/components/lib/pasword-validators";
-import type { ContactMethod, FormAction, FormField, FormState, RegisterPayload, TokenResponse } from "./use-register-types";
+import { useAuthStore, type AuthUser } from "@/components/zustand/auth-info";
+import { api } from "@/request/api";
+import { links } from "@/request/links";
+import { secureStorage } from "@/request/secure-storage";
 
 // ---------------------------------------------------------------------------
 // Backend sxemasiga mos tiplar (ustuvon_api_schema.yaml: Register, TokenResponse)
 // ---------------------------------------------------------------------------
 
+type ContactMethod = "phone" | "email";
+
+interface RegisterPayload {
+  first_name: string;
+  last_name: string;
+  password: string;
+  phone?: string;
+  email?: string;
+}
+
+interface TokenResponse {
+  access: string;
+  refresh: string;
+  user: AuthUser;
+  user_type: string;
+}
+
 const RESEND_COOLDOWN_SECONDS = 60;
+
+// ---------------------------------------------------------------------------
+// Forma holati
+// ---------------------------------------------------------------------------
+
+type FormField =
+  | "firstName"
+  | "lastName"
+  | "contactValue"
+  | "password"
+  | "confirmPassword";
+
+interface FormState {
+  firstName: string;
+  lastName: string;
+  contactMethod: ContactMethod;
+  contactValue: string;
+  password: string;
+  confirmPassword: string;
+  errors: Partial<Record<FormField, string>>;
+}
+
+type FormAction =
+  | { type: "SET_FIELD"; field: FormField; value: string }
+  | { type: "SET_CONTACT_METHOD"; method: ContactMethod }
+  | { type: "SET_ERRORS"; errors: FormState["errors"] };
 
 const initialState: FormState = {
   firstName: "",
@@ -108,6 +152,7 @@ export function useRegister() {
   const [code, setCode] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const navigate = useNavigate();
+  const setSession = useAuthStore((state) => state.setSession);
 
   const cooldownTimer = useRef<number | null>(null);
 
@@ -145,6 +190,8 @@ export function useRegister() {
       // login) — shuning uchun tasdiqlash bosqichida ham /auth/verify/
       // (jwtAuth talab qiladi) so'rovlari muammosiz ishlaydi.
       await secureStorage.setTokens(data.access, data.refresh);
+      await secureStorage.setUserType(data.user_type);
+      setSession(data.user, data.user_type);
       setStep("verify");
       startCooldown();
     },

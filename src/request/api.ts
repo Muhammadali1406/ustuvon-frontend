@@ -14,10 +14,25 @@ import axios, {
 } from "axios";
 import { links } from "./links";
 import { secureStorage } from "./secure-storage";
+import { useAuthStore } from "@/components/zustand/auth-info";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? "",
 });
+
+// ---------------------------------------------------------------------------
+// Sessiya tugaganda kim xabardor bo'lishini shu fayl bilmaydi — faqat signal
+// beradi. authStore.ts shu funksiyani chaqirib o'zini ro'yxatdan o'tkazadi.
+// (api.ts -> authStore.ts import qilmaydi, aks holda authStore.ts -> api.ts
+// bilan aylanma bog'liqlik hosil bo'lardi.)
+// ---------------------------------------------------------------------------
+
+type SessionExpiredHandler = () => void;
+let onSessionExpired: SessionExpiredHandler | null = null;
+
+export function registerSessionExpiredHandler(handler: SessionExpiredHandler) {
+  onSessionExpired = handler;
+}
 
 // ---------------------------------------------------------------------------
 // Request interceptor — access tokenni Authorization header'ga qo'shadi
@@ -61,8 +76,9 @@ async function refreshAccessToken(): Promise<string | null> {
 
     return data.access;
   } catch {
-    // Refresh token ham yaroqsiz — foydalanuvchi qayta login qilishi kerak
-    secureStorage.clear();
+    // Refresh token ham yaroqsiz — global holatni ham, storage'ni ham
+    // tozalaymiz, foydalanuvchi qayta login qilishi kerak bo'ladi
+    useAuthStore.getState().logout();
     return null;
   }
 }
@@ -92,8 +108,7 @@ api.interceptors.response.use(
     const newAccessToken = await refreshPromise;
 
     if (!newAccessToken) {
-      // TODO: global auth state'ni tozalab, /login ga yo'naltirish
-      // (masalan window.location.href = "/login" yoki router orqali)
+      onSessionExpired?.();
       return Promise.reject(error);
     }
 

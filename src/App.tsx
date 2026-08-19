@@ -18,6 +18,7 @@ import NotFound from "./pages/not-found";
 import TestRules from "./pages/user/test-rule";
 import SubjectDetail from "./pages/user/user-subject-detail";
 import TestRun from "./pages/user/test-run";
+import ResetPaswrod from "./pages/resetPasword/resetPaswrod";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/password-reset" element={<ResetPaswrod />} />
 
       {/* Admin routes with shared layout */}
       <Route path="/admin" element={<AdminLayout />}>

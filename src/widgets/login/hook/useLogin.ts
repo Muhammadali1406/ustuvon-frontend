@@ -2,8 +2,9 @@ import { useCallback, useReducer } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { links } from "@/request/links";
+import { useAuthStore, type AuthUser } from "@/components/zustand/auth-info";
 import { api } from "@/request/api";
+import { links } from "@/request/links";
 import { secureStorage } from "@/request/secure-storage";
 
 // ---------------------------------------------------------------------------
@@ -13,18 +14,6 @@ import { secureStorage } from "@/request/secure-storage";
 interface LoginPayload {
   identifier: string; // telefon yoki email
   password: string;
-}
-
-interface AuthUser {
-  id: string;
-  first_name: string;
-  last_name: string;
-  phone: string | null;
-  email: string | null;
-  is_phone_verified: boolean;
-  is_email_verified: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 interface TokenResponse {
@@ -107,6 +96,7 @@ function extractServerError(error: unknown): string {
 export function useLogin() {
   const [form, dispatch] = useReducer(formReducer, initialState);
   const navigate = useNavigate();
+  const setSession = useAuthStore((state) => state.setSession);
 
   const mutation = useMutation({
     mutationFn: async (payload: LoginPayload) => {
@@ -114,9 +104,16 @@ export function useLogin() {
       return data;
     },
     onSuccess: async (data) => {
+      // 1) Tokenlarni shifrlangan holda saqlaymiz (keyingi so'rovlar va
+      //    sahifa yangilanganda tiklash uchun)
       await secureStorage.setTokens(data.access, data.refresh);
-      // TODO: AuthContext qurilgach, data.user va data.user_type shu yerda
-      // global holatga yoziladi (hozircha faqat tokenlar saqlanadi)
+      await secureStorage.setUserType(data.user_type);
+
+      // 2) Global holatga yozamiz — endi UserLayout, Home, ProtectedRoute
+      //    va h.k. barchasi shu yerdan o'qiydi. /auth/me/ ga QO'SHIMCHA
+      //    so'rov YO'Q — user obyekti javobning o'zida allaqachon keldi.
+      setSession(data.user, data.user_type);
+
       navigate(data.user_type === "admin" ? "/admin" : "/app", {
         replace: true,
       });
