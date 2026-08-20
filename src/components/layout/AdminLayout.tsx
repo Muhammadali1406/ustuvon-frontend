@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import {
@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import { UserNav } from "./userNav";
+import { useAuthStore } from "../zustand/auth-info";
 
 interface NavItem {
   to: string;
@@ -62,6 +63,13 @@ function SidebarRow({
 
 function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `group relative flex items-center justify-center gap-3 rounded-lg px-2 py-2.5 transition-colors duration-200 md:justify-start md:px-4 ${
@@ -112,9 +120,7 @@ function AdminLayout() {
           </NavLink>
           <button
             type="button"
-            onClick={() => {
-              // TODO: auth logikaga ulash (token tozalash + /login ga redirect)
-            }}
+            onClick={handleLogout}
             className="group relative flex items-center justify-center gap-3 rounded-lg px-2 py-2.5 text-gray-400 transition-colors duration-200 hover:bg-rose-500/10 hover:text-rose-400 md:justify-start md:px-4"
           >
             <SidebarRow icon={<LogOut size={18} />} label="Chiqish" tone="danger" />

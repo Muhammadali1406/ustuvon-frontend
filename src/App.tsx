@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "./components/layout/AdminLayout";
+import UserLayout from "./components/layout/UserLayout";
 import Subjects from "./pages/admin/Subjects";
 import Tests from "./pages/admin/Tests";
 import TestCreate from "./pages/admin/TestCreate";
@@ -7,30 +8,62 @@ import Users from "./pages/admin/Users";
 import Statistics from "./pages/admin/Statistics";
 import Dashboard from "./pages/admin/Dashboard";
 import LandingPage from "./pages/landing/landing-pages";
-import Login from "./pages/login/login";
-import Register from "./pages/register/register";
-import UserLayout from "./pages/user/user-layout";
+import LoginPage from "./widgets/login/ui/login-page";
+import RegisterPage from "./widgets/register/ui/register-page";
+import PasswordResetPage from "./widgets/reset-pasword/ui/paswordResetPage";
+import { GuestRoute } from "./components/layout/Guestroute";
+import { ProtectedRoute } from "./components/layout/Protectedroute";
 import Home from "./pages/user/home";
 import UserSubjects from "./pages/user/user-subject";
-import UserResults from "./pages/user/user-result";
-import UserProfile from "./pages/user/user-profile";
-import NotFound from "./pages/not-found";
-import TestRules from "./pages/user/test-rule";
 import SubjectDetail from "./pages/user/user-subject-detail";
+import TestRules from "./pages/user/test-rule";
+import UserProfile from "./pages/user/user-profile";
 import TestRun from "./pages/user/test-run";
-import ResetPaswrod from "./pages/resetPasword/resetPaswrod";
+import UserResults from "./pages/user/user-result";
+import NotFound from "./pages/not-found";
 
 function App() {
   return (
     <Routes>
-      {/* Public */}
+      {/* Ommaviy */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/password-reset" element={<ResetPaswrod />} />
 
-      {/* Admin routes with shared layout */}
-      <Route path="/admin" element={<AdminLayout />}>
+      {/* Faqat kirmagan foydalanuvchi uchun — kirgan bo'lsa o'z bosh
+          sahifasiga qaytariladi (GuestRoute) */}
+      <Route
+        path="/login"
+        element={
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        }
+      />
+      <Route
+        path="/password-reset"
+        element={
+          <GuestRoute>
+            <PasswordResetPage />
+          </GuestRoute>
+        }
+      />
+
+      {/* Admin — faqat user_type === "admin" kira oladi */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedUserTypes={["admin"]}>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Dashboard />} />
         <Route path="subjects" element={<Subjects />} />
         <Route path="tests" element={<Tests />} />
@@ -39,8 +72,15 @@ function App() {
         <Route path="statistics" element={<Statistics />} />
       </Route>
 
-      {/* Foydalanuvchi (user profile) routes with shared layout */}
-      <Route path="/app" element={<UserLayout />}>
+      {/* Foydalanuvchi — tizimga kirgan istalgan kishi (rol farqi yo'q) */}
+      <Route
+        path="/app"
+        element={
+          <ProtectedRoute>
+            <UserLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Home />} />
         <Route path="subjects" element={<UserSubjects />} />
         <Route path="subjects/:subjectId" element={<SubjectDetail />} />

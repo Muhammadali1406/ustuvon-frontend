@@ -1,10 +1,10 @@
 import { useCallback, useReducer } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useAuthStore, type AuthUser } from "@/components/zustand/auth-info";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
+import { useAuthStore, type AuthUser } from "@/components/zustand/auth-info";
 import { secureStorage } from "@/request/secure-storage";
 
 // ---------------------------------------------------------------------------
@@ -96,6 +96,7 @@ function extractServerError(error: unknown): string {
 export function useLogin() {
   const [form, dispatch] = useReducer(formReducer, initialState);
   const navigate = useNavigate();
+  const location = useLocation();
   const setSession = useAuthStore((state) => state.setSession);
 
   const mutation = useMutation({
@@ -114,7 +115,15 @@ export function useLogin() {
       //    so'rov YO'Q — user obyekti javobning o'zida allaqachon keldi.
       setSession(data.user, data.user_type);
 
-      navigate(data.user_type === "admin" ? "/admin" : "/app", {
+      // ProtectedRoute foydalanuvchini bu yerga /login'ga yo'naltirishdan
+      // oldin qaysi sahifaga borishga uringanini state.from'ga yozib
+      // qo'ygan bo'lishi mumkin — bo'lsa o'sha yerga qaytaramiz
+      const from = (location.state as { from?: Location })?.from as
+        | Location
+        | undefined;
+      const fallback = data.user_type === "admin" ? "/admin" : "/app";
+
+      navigate(from ? `${from.pathname}${from.search}` : fallback, {
         replace: true,
       });
     },
