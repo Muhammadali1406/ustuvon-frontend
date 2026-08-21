@@ -2,7 +2,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Copy, Pencil, Sparkles, Trash2, User } from "lucide-react";
 import { StatusBadge } from "./status-badge";
-import type { Test } from "../lib/test-types";
+import type { Test } from "../hook/test-types";
 
 interface ColumnActions {
   onEdit?: (test: Test) => void;

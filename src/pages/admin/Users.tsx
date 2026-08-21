@@ -1,16 +1,16 @@
 import { DataTable } from "@/components/ui/table/datatable";
-import { StatCard } from "@/widgets/statistics/ui/stat-cards-statistics";
-import { STATUS_FILTERS } from "@/widgets/users/lib/mock-data-users";
-import type { StatusFilterKey } from "@/widgets/users/lib/types-users";
-import { columns } from "@/widgets/users/lib/user-table-column";
-import { buildUsers } from "@/widgets/users/lib/utils";
+import { STATUS_FILTERS } from "@/widgets/users/hook/mock-data-users";
+import type { StatusFilterKey } from "@/widgets/users/hook/types-users";
+import { columns } from "@/widgets/users/hook/user-table-column";
+import { useUser } from "@/widgets/users/hook/useUser";
+import { StatCard } from "@/widgets/users/ui/stat-card-users";
 import { CheckCircle2, Search, UserPlus, UsersIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export default function Users() {
-  const allUsers = useMemo(buildUsers, []);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterKey>("barchasi");
+  const { allUsers , userUpdate } = useUser();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -111,7 +111,7 @@ export default function Users() {
       </div>
 
       <DataTable
-        columns={columns}
+        columns={columns({ onDelete: () => {}, onEdit: userUpdate })}
         data={filtered}
         pageSize={8}
         emptyState={

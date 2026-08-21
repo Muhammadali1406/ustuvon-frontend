@@ -3,7 +3,6 @@ import AdminLayout from "./components/layout/AdminLayout";
 import UserLayout from "./components/layout/UserLayout";
 import Subjects from "./pages/admin/Subjects";
 import Tests from "./pages/admin/Tests";
-import TestCreate from "./pages/admin/TestCreate";
 import Users from "./pages/admin/Users";
 import Statistics from "./pages/admin/Statistics";
 import Dashboard from "./pages/admin/Dashboard";
@@ -12,7 +11,7 @@ import LoginPage from "./widgets/login/ui/login-page";
 import RegisterPage from "./widgets/register/ui/register-page";
 import PasswordResetPage from "./widgets/reset-pasword/ui/paswordResetPage";
 import { GuestRoute } from "./components/layout/Guestroute";
-import { ProtectedRoute } from "./components/layout/Protectedroute";
+//import { ProtectedRoute } from "./components/layout/Protectedroute";
 import Home from "./pages/user/home";
 import UserSubjects from "./pages/user/user-subject";
 import SubjectDetail from "./pages/user/user-subject-detail";
@@ -67,7 +66,6 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route path="subjects" element={<Subjects />} />
         <Route path="tests" element={<Tests />} />
-        <Route path="tests/create" element={<TestCreate />} />
         <Route path="users" element={<Users />} />
         <Route path="statistics" element={<Statistics />} />
       </Route>

@@ -1,13 +1,18 @@
-import { TEST_FORMATS, type TestFormValues } from "@/widgets/test/lib/test-types";
-import type { SubjectOption, TestMeta } from "./create-test-modal";
+import type { SubjectOption } from "./create-test-modal";
+import type { TestMeta } from "../hook/useCreateTest";
+import { TEST_FORMATS, type TestFormValues } from "@/widgets/test/hook/test-types";
 
 interface GeneralfieldsProps {
-    meta:TestMeta;
-    setMeta: React.Dispatch<React.SetStateAction<TestMeta>>;
-    subjects: SubjectOption[];
+  meta: TestMeta;
+  setMeta: React.Dispatch<React.SetStateAction<TestMeta>>;
+  subjects: SubjectOption[];
 }
 
-export default function Generalfields( { meta, setMeta, subjects }: GeneralfieldsProps ) {
+export default function Generalfields({
+  meta,
+  setMeta,
+  subjects,
+}: GeneralfieldsProps) {
   return (
     <div className="mt-4 grid grid-cols-2 gap-3">
       <div className="col-span-2">

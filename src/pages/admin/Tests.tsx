@@ -1,4 +1,3 @@
-
 import { useMemo, useState } from "react";
 import { FileQuestion, Plus, Search } from "lucide-react";
 import {
@@ -6,10 +5,8 @@ import {
   TEST_STATUSES,
   type Test,
   type TestFormat,
-  type TestFormValues,
   type TestStatus,
 } from "@/widgets/test/hook/test-types";
-import { mockTests } from "@/widgets/test/hook/mock-test-data-test";
 import { mockSubjects } from "@/widgets/subject";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
@@ -30,7 +27,7 @@ export default function TestsPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
 
-  const {tests , handleCreate , handleDelete} = useTest();
+  const { tests, handleCreate, handleDelete } = useTest();
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
@@ -54,8 +51,6 @@ export default function TestsPage() {
     }),
     [tests],
   );
-
- 
 
   return (
     <div className="h-full w-full">
@@ -172,7 +167,3 @@ export default function TestsPage() {
     </div>
   );
 }
-
-
-
-
