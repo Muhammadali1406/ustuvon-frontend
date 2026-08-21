@@ -1,6 +1,6 @@
 import { Plus, Sparkles } from "lucide-react";
 import { Modal } from "@/widgets/subject";
-import { type TestFormValues } from "@/widgets/test/lib/test-types";
+import { type TestFormValues } from "@/widgets/test/hook/test-types";
 import TestButtons from "./buttons";
 import { TabButton } from "./tab-button";
 import { QuestionEditor } from "@/widgets/test/ui/question-editor";

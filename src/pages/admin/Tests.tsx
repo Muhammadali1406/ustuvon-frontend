@@ -8,8 +8,8 @@ import {
   type TestFormat,
   type TestFormValues,
   type TestStatus,
-} from "@/widgets/test/lib/test-types";
-import { mockTests } from "@/widgets/test/lib/mock-test-data-test";
+} from "@/widgets/test/hook/test-types";
+import { mockTests } from "@/widgets/test/hook/mock-test-data-test";
 import { mockSubjects } from "@/widgets/subject";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
@@ -17,18 +17,20 @@ import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
 import { SummaryCard } from "@/widgets/test/ui/summary-card";
 import { SelectFilter } from "@/widgets/test/ui/select-filter";
 import { CreateTestModal } from "@/components/modals/testCreate/ui/create-test-modal";
+import { useTest } from "@/widgets/test/hook/useTest";
 
 type FormatFilter = TestFormat | "Barchasi";
 type StatusFilter = TestStatus | "Barchasi";
 
 export default function TestsPage() {
-  const [tests, setTests] = useState<Test[]>(mockTests);
   const [search, setSearch] = useState("");
   const [formatFilter, setFormatFilter] = useState<FormatFilter>("Barchasi");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("Barchasi");
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
+
+  const {tests , handleCreate , handleDelete} = useTest();
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
@@ -53,38 +55,7 @@ export default function TestsPage() {
     [tests],
   );
 
-  function handleCreate(values: TestFormValues) {
-    const subject = mockSubjects.find((s) => s.id === values.subjectId);
-    const newTest: Test = {
-      id: `test_${Date.now()}`,
-      title: values.title,
-      subjectId: values.subjectId,
-      subjectName: subject?.name ?? "—",
-      format: values.format,
-      questionsCount: values.questions.length,
-      totalBall: values.questions.reduce((sum, q) => sum + q.ball, 0),
-      durationMinutes: values.durationMinutes,
-      status: values.status,
-      createdAt: new Date().toISOString(),
-      createdVia: "ai", // TODO: haqiqiy oqimda tab holatidan aniqlanadi
-    };
-    setTests((prev) => [newTest, ...prev]);
-  }
-
-  // function handleDuplicate(test: Test) {
-  //   const copy: Test = {
-  //     ...test,
-  //     id: `test_${Date.now()}`,
-  //     title: `${test.title} (nusxa)`,
-  //     status: "Qoralama",
-  //     createdAt: new Date().toISOString(),
-  //   };
-  //   setTests((prev) => [copy, ...prev]);
-  // }
-
-  function handleDelete(test: Test) {
-    setTests((prev) => prev.filter((t) => t.id !== test.id));
-  }
+ 
 
   return (
     <div className="h-full w-full">
