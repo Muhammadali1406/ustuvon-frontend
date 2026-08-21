@@ -9,6 +9,8 @@
 //   - /subjects/category_create  (oxirida "/" yo'q — boshqa create'lardan farqli)
 // ---------------------------------------------------------------------------
 
+import type {Subject} from "@/widgets/subject/lib/type-subject"
+
 const API_ORIGIN = import.meta.env.VITE_API_BASE_URL ?? "";
 const API_BASE = `${API_ORIGIN}/api/v1`;
 
@@ -47,8 +49,8 @@ export const links = {
     categoryDelete: (id: number | string) =>
       `${API_BASE}/subjects/category_delete/${id}/`,
     subjectCreate: `${API_BASE}/subjects/subject_create/`,
-    subjectUpdate: (id: number | string) =>
-      `${API_BASE}/subjects/subject_update/${id}/`,
+    subjectUpdate: (data:Subject) =>
+      `${API_BASE}/subjects/subject_update/${data}/`,
     subjectDelete: (id: number | string) =>
       `${API_BASE}/subjects/subject_delete/${id}/`,
   },

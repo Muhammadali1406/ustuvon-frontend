@@ -3,7 +3,6 @@ import { ChevronDown, Plus, Search } from "lucide-react";
 import {
   CategoryBadge,
   EmptyState,
-  mockSubjects,
   SUBJECT_CATEGORIES,
 } from "@/widgets/subject";
 import { SubjectFormModal } from "@/widgets/subject/ui/subject-form-modal";
@@ -12,35 +11,16 @@ import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildSubjectsColumns } from "@/widgets/subject/ui/subject-column";
 import type {
-  SubjectFormValues,
-  ScheduledTest,
   Subject,
   SubjectCategory,
 } from "@/widgets/subject/lib/type-subject";
 import { StatusToggle } from "@/widgets/subject/ui/status-togle";
+import { formatDate, formatDateTime } from "@/components/lib/formats";
+import { useSubjects } from "@/widgets/subject/lib/useSubject";
 
 type CategoryFilter = SubjectCategory | "Barchasi";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("uz-UZ", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
-
-function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString("uz-UZ", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export default function SubjectsPage() {
-  const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] =
     useState<CategoryFilter>("Barchasi");
@@ -55,6 +35,18 @@ export default function SubjectsPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<Subject | null>(null);
 
+  const {
+    subjects,
+    handleCreate,
+    handleDelete,
+    handleUpdate,
+    handleSchedule,
+    handleToggleActive,
+    deletePending,
+    updatePending,
+    createPending,
+  } = useSubjects({ editingSubject, schedulingSubject });
+
   const filteredSubjects = useMemo(() => {
     return subjects.filter((s) => {
       const matchesSearch = s.name
@@ -66,63 +58,20 @@ export default function SubjectsPage() {
     });
   }, [subjects, search, categoryFilter]);
 
-  // --- CRUD amallari (TODO: API bilan almashtiring) ---
-
-  function handleCreate(values: SubjectFormValues) {
-    const newSubject: Subject = {
-      id: `subj_${Date.now()}`,
-      name: values.name.trim(),
-      category: values.category,
-      isActive: values.isActive,
-      testsCount: 0,
-      createdAt: new Date().toISOString(),
-      scheduledTest: null,
-    };
-    setSubjects((prev) => [newSubject, ...prev]);
-  }
-
-  function handleUpdate(values: SubjectFormValues) {
-    if (!editingSubject) return;
-    setSubjects((prev) =>
-      prev.map((s) => (s.id === editingSubject.id ? { ...s, ...values } : s)),
-    );
-  }
-
-  function handleDelete(subject: Subject) {
-    setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
-  }
-
-  function handleToggleActive(subject: Subject) {
-    setSubjects((prev) =>
-      prev.map((s) =>
-        s.id === subject.id ? { ...s, isActive: !s.isActive } : s,
-      ),
-    );
-  }
-
-  function handleSchedule(scheduled: ScheduledTest) {
-    if (!schedulingSubject) return;
-    setSubjects((prev) =>
-      prev.map((s) =>
-        s.id === schedulingSubject.id ? { ...s, scheduledTest: scheduled } : s,
-      ),
-    );
-  }
-
-  function openCreateModal() {
+  const openCreateModal = () => {
     setEditingSubject(null);
     setFormModalOpen(true);
-  }
+  };
 
-  function openEditModal(subject: Subject) {
+  const openEditModal = (subject: Subject) => {
     setEditingSubject(subject);
     setFormModalOpen(true);
-  }
+  };
 
-  function openScheduleModal(subject: Subject) {
+  const openScheduleModal = (subject: Subject) => {
     setSchedulingSubject(subject);
     setScheduleModalOpen(true);
-  }
+  };
 
   return (
     <div className="h-full">

@@ -1,12 +1,3 @@
-// ---------------------------------------------------------------------------
-// api.ts
-//
-// Markazlashtirilgan axios instance. Har bir so'rovga shifrlangan
-// localStorage'dan olingan access tokenni avtomatik qo'shadi. 401 kelsa —
-// bitta marta /auth/token/refresh/ chaqirib, tokenlarni yangilaydi va asl
-// so'rovni qayta yuboradi. Parallel so'rovlar bir vaqtda bir nechta refresh
-// chaqirmasligi uchun navbat (queue) mantig'i bilan.
-// ---------------------------------------------------------------------------
 
 import axios, {
   type AxiosError,
@@ -19,13 +10,6 @@ import { useAuthStore } from "@/components/zustand/auth-info";
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? "",
 });
-
-// ---------------------------------------------------------------------------
-// Sessiya tugaganda kim xabardor bo'lishini shu fayl bilmaydi — faqat signal
-// beradi. authStore.ts shu funksiyani chaqirib o'zini ro'yxatdan o'tkazadi.
-// (api.ts -> authStore.ts import qilmaydi, aks holda authStore.ts -> api.ts
-// bilan aylanma bog'liqlik hosil bo'lardi.)
-// ---------------------------------------------------------------------------
 
 type SessionExpiredHandler = () => void;
 let onSessionExpired: SessionExpiredHandler | null = null;

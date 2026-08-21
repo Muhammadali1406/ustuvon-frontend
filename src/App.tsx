@@ -59,9 +59,9 @@ function App() {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute allowedUserTypes={["admin"]}>
-            <AdminLayout />
-          </ProtectedRoute>
+          // <ProtectedRoute allowedUserTypes={["admin"]}>
+          // </ProtectedRoute>
+          <AdminLayout />
         }
       >
         <Route index element={<Dashboard />} />
@@ -76,9 +76,9 @@ function App() {
       <Route
         path="/app"
         element={
-          <ProtectedRoute>
-            <UserLayout />
-          </ProtectedRoute>
+          // <ProtectedRoute>
+          // </ProtectedRoute>
+          <UserLayout />
         }
       >
         <Route index element={<Home />} />
