@@ -5,8 +5,8 @@ import { StatusBadge } from "./status-badge";
 import type { Test } from "../lib/test-types";
 
 interface ColumnActions {
-  onEdit: (test: Test) => void;
-  onDuplicate: (test: Test) => void;
+  onEdit?: (test: Test) => void;
+  onDuplicate?: (test: Test) => void;
   onDelete: (test: Test) => void;
 }
 
@@ -85,14 +85,14 @@ export function buildTestsColumns({
         return (
           <div className="flex items-center justify-end gap-1">
             <button
-              onClick={() => onEdit(test)}
+              onClick={() => onEdit?.(test)}
               className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               aria-label="Tahrirlash"
             >
               <Pencil size={16} />
             </button>
             <button
-              onClick={() => onDuplicate(test)}
+              onClick={() => onDuplicate?.(test)}
               className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               aria-label="Nusxa olish"
             >

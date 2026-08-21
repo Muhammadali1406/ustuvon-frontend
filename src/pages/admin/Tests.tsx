@@ -71,23 +71,19 @@ export default function TestsPage() {
     setTests((prev) => [newTest, ...prev]);
   }
 
-  function handleDuplicate(test: Test) {
-    const copy: Test = {
-      ...test,
-      id: `test_${Date.now()}`,
-      title: `${test.title} (nusxa)`,
-      status: "Qoralama",
-      createdAt: new Date().toISOString(),
-    };
-    setTests((prev) => [copy, ...prev]);
-  }
+  // function handleDuplicate(test: Test) {
+  //   const copy: Test = {
+  //     ...test,
+  //     id: `test_${Date.now()}`,
+  //     title: `${test.title} (nusxa)`,
+  //     status: "Qoralama",
+  //     createdAt: new Date().toISOString(),
+  //   };
+  //   setTests((prev) => [copy, ...prev]);
+  // }
 
   function handleDelete(test: Test) {
     setTests((prev) => prev.filter((t) => t.id !== test.id));
-  }
-
-  function handleEdit(_test: Test) {
-    // TODO: CreateTestModal'ni "tahrirlash" rejimida ochish (initialValues bilan)
   }
 
   return (
@@ -168,8 +164,8 @@ export default function TestsPage() {
         <div className="mt-5">
           <DataTable
             columns={buildTestsColumns({
-              onEdit: handleEdit,
-              onDuplicate: handleDuplicate,
+              // onEdit: handleEdit,
+              // onDuplicate: handleDuplicate,
               onDelete: (test) => setDeleteTarget(test),
             })}
             data={filteredTests}
