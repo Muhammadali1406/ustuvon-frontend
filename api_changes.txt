@@ -1,1 +1,3 @@
   /api/v1/subjects/subject_update/{id}/ -- bunda update qilingan datani qabul qilishi kerak - hozir id ketyabdi
+  /api/v1/ai-parser/jobs/upload/ -- responseda job_id ni qaytarish kerak.
+  /api/v1/ai-parser/jobs/{job_id}/questions/ -- bunda har bitta question qaysi job_id key value bo'lsin.

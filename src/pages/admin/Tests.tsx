@@ -13,10 +13,10 @@ import { mockTests } from "@/widgets/test/lib/mock-test-data-test";
 import { mockSubjects } from "@/widgets/subject";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
-import { CreateTestModal } from "@/widgets/test";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
 import { SummaryCard } from "@/widgets/test/ui/summary-card";
 import { SelectFilter } from "@/widgets/test/ui/select-filter";
+import { CreateTestModal } from "@/components/modals/testCreate/ui/create-test-modal";
 
 type FormatFilter = TestFormat | "Barchasi";
 type StatusFilter = TestStatus | "Barchasi";
