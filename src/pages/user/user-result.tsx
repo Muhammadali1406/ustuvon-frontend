@@ -12,7 +12,6 @@ import {
 import { Search, Sparkles, Target, Trophy } from "lucide-react";
 import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
 import { RESULT_HISTORY, type ResultRecord } from "@/widgets/user-result/hook/user-result-data";
-import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 import { DataTable } from "@/components/ui/table/datatable";
 
 // ---------------------------------------------------------------------------
