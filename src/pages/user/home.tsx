@@ -14,11 +14,13 @@ import {
   SubjectCard,
 } from "@/widgets/user-home/ui/presentational-pieces";
 import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
+import { useAuthStore } from "@/components/zustand/auth-info";
 
 export default function Home() {
   const [showAllSubjects, setShowAllSubjects] = useState(false);
- 
-  const firstName = DEMO_USER.fullName.split(" ")[0];
+  const user = useAuthStore((state) => state.user);
+  
+  const firstName = user?.first_name || DEMO_USER.first_name;
   const today = useMemo(
     () =>
       new Date(2026, 6, 12).toLocaleDateString("uz-UZ", {
@@ -48,12 +50,12 @@ export default function Home() {
           <StatChip
             icon={<Target size={16} />}
             label="Ishlangan testlar"
-            value={`${DEMO_USER.testsTaken} ta`}
+            value={`${10} ta`}
           />
           <StatChip
             icon={<Sparkles size={16} />}
             label="O'rtacha ball"
-            value={`${DEMO_USER.avgScore}%`}
+            value={`${10}%`}
           />
         </div>
       </div>

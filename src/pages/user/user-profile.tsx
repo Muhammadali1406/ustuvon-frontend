@@ -3,11 +3,11 @@ import StatUserProfile from "@/widgets/user-profile/ui/stats-user-profile";
 import PersonalInfo from "@/widgets/user-profile/ui/personal-info";
 import SertificateUserProfile from "@/widgets/user-profile/ui/user-sertificate";
 import Password from "@/widgets/user-profile/ui/password";
+import { useAuthStore } from "@/components/zustand/auth-info";
+import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 
 export default function UserProfile() {
-  // Parolni yangilash — 2 bosqichli (forma -> SMS/email kod tasdiqlash)
-
-  // Sertifikatlar — 85%+ natijaga ega har bir fandagi eng yaxshi urinish
+  const user = useAuthStore((state) => state.user);
 
   return (
     <div className="space-y-6">
@@ -25,7 +25,7 @@ export default function UserProfile() {
       <StatUserProfile />
 
       {/* Personal info */}
-      <PersonalInfo />
+      <PersonalInfo DEMO_USER={user || DEMO_USER} />
 
       {/* Certificates */}
       <SertificateUserProfile />

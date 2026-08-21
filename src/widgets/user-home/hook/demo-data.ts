@@ -1,3 +1,4 @@
+import type { AuthUser } from "@/components/zustand/auth-info";
 import type { DemoUser, ResultItem, Subject } from "./types";
 import {
   Atom,
@@ -10,15 +11,16 @@ import {
   Sigma,
 } from "lucide-react";
 
-export const DEMO_USER: DemoUser = {
-  fullName: "Aziz Karimov",
-  userCode: "UST-1042",
-  email: "aziz.karimov@gmail.com",
-  phone: "+998 90 123 45 67",
-  joinedAt: "12.03.2026",
-  testsTaken: 24,
-  avgScore: 78,
-  bestScore: 91,
+export const DEMO_USER: AuthUser = {
+  id: "8f7c9e2a-4b31-4d6e-91a2-5c8f3b7e1042",
+  first_name: "John",
+  last_name: "Doe",
+  phone: "+998901234567",
+  email: "john.doe@example.com",
+  is_phone_verified: true,
+  is_email_verified: true,
+  created_at: "2026-08-21T07:30:00Z",
+  updated_at: "2026-08-21T07:30:00Z",
 };
 
 export const SUBJECTS: Subject[] = [

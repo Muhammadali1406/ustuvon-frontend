@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FieldRow } from "./field-rox-user-profile";
 import { CheckCircle2, Mail, Pencil, Phone, User, X } from "lucide-react";
-import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
+import type { AuthUser } from "@/components/zustand/auth-info";
 
-export default function PersonalInfo() {
-  const [firstName, lastName] = DEMO_USER.fullName.split(" ");
+export default function PersonalInfo({DEMO_USER}: {DEMO_USER: AuthUser}) {
+  const [firstName, lastName] = DEMO_USER.first_name
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     firstName,
@@ -93,18 +93,18 @@ export default function PersonalInfo() {
         <FieldRow
           icon={<Phone size={16} />}
           label="Telefon"
-          value={form.phone}
+          value={form.phone||"Telefon raqam kiritilmagan"}
           editing={isEditing}
-          inputValue={form.phone}
+          inputValue={form.phone||""}
           onChange={(v) => setForm((f) => ({ ...f, phone: v }))}
           type="tel"
         />
         <FieldRow
           icon={<Mail size={16} />}
           label="Email"
-          value={form.email}
+          value={form.email || "Email kiritilmagan"}
           editing={isEditing}
-          inputValue={form.email}
+          inputValue={form.email || ""}
           onChange={(v) => setForm((f) => ({ ...f, email: v }))}
           type="email"
         />

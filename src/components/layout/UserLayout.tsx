@@ -2,32 +2,11 @@ import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, History, Home, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../zustand/auth-info";
+import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 
 // ---------------------------------------------------------------------------
 // Demo user — auth tugagach real sessiya/context bilan almashtiriladi
 // ---------------------------------------------------------------------------
-
-export interface DemoUser {
-  fullName: string;
-  userCode: string;
-  email: string;
-  phone: string;
-  joinedAt: string; // "12.03.2026"
-  testsTaken: number;
-  avgScore: number; // foizda
-  bestScore: number; // foizda
-}
-
-export const DEMO_USER: DemoUser = {
-  fullName: "Aziz Karimov",
-  userCode: "UST-1042",
-  email: "aziz.karimov@gmail.com",
-  phone: "+998 90 123 45 67",
-  joinedAt: "12.03.2026",
-  testsTaken: 24,
-  avgScore: 78,
-  bestScore: 91,
-};
 
 function initials(fullName: string) {
   return fullName
@@ -68,9 +47,9 @@ function Avatar() {
     <Link
       to="/app/profile"
       className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
-      title={DEMO_USER.fullName}
+      title={DEMO_USER.first_name}
     >
-      {initials(DEMO_USER.fullName)}
+      {initials(DEMO_USER.first_name)}
     </Link>
   );
 }

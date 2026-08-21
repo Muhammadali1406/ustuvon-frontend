@@ -136,17 +136,17 @@ export default function UserResults() {
         <StatChip
           icon={<Target size={16} />}
           label="Jami ishlangan testlar"
-          value={`${DEMO_USER.testsTaken} ta`}
+          value={`${10} ta`}
         />
         <StatChip
           icon={<Sparkles size={16} />}
           label="O'rtacha ball"
-          value={`${DEMO_USER.avgScore}%`}
+          value={`${10}%`}
         />
         <StatChip
           icon={<Trophy size={16} />}
           label="Eng yaxshi natija"
-          value={`${DEMO_USER.bestScore}%`}
+          value={`${10}%`}
         />
       </div>
 
