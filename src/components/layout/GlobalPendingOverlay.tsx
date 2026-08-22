@@ -33,7 +33,7 @@ export function GlobalPendingOverlay() {
       role="status"
       aria-live="polite"
       aria-label="Yuklanmoqda"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#101826]/20 backdrop-blur-[2px]"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-[#101826]/20 backdrop-blur-[2px]"
     >
       <div className="flex items-center gap-3 rounded-xl bg-white px-6 py-4 shadow-xl">
         <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#0EBE15] border-t-transparent" />
