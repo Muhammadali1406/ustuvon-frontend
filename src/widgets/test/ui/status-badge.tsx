@@ -1,4 +1,5 @@
-import type { UserStatus } from "@/widgets/users/lib/types-users";
+import type { UserStatus } from "@/widgets/users/hook/types-users";
+
 
 const STATUS_STYLES: Record<UserStatus, string> = {
   faol: "bg-slate-100 text-slate-600 ring-slate-200",

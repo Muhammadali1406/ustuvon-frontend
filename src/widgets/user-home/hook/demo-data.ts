@@ -1,5 +1,5 @@
 import type { AuthUser } from "@/components/zustand/auth-info";
-import type { DemoUser, ResultItem, Subject } from "./types";
+import type { ResultItem, Subject } from "./types";
 import {
   Atom,
   Award,

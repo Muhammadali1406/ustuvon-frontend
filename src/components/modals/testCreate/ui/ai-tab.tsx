@@ -1,7 +1,7 @@
 import { FileUp, Loader2, TriangleAlert } from "lucide-react";
 import { useRef } from "react";
 import type { AiState } from "./create-test-modal";
-import type { Question } from "@/widgets/test/lib/test-types";
+import type { Question } from "@/widgets/test/hook/test-types";
 
 interface AiTabProps {
     aiState:AiState;
