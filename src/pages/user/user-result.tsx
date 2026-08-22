@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
+
 import {
   Area,
   AreaChart,
@@ -11,56 +11,16 @@ import {
 } from "recharts";
 import { Search, Sparkles, Target, Trophy } from "lucide-react";
 import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
-import { RESULT_HISTORY, type ResultRecord } from "@/widgets/user-result/hook/user-result-data";
+import { RESULT_HISTORY } from "@/widgets/user-result/hook/user-result-data";
 import { DataTable } from "@/components/ui/table/datatable";
-
-// ---------------------------------------------------------------------------
-// Presentational pieces
-// ---------------------------------------------------------------------------
-
-function StatChip({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-black/8 bg-white px-4 py-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#E7F8E8] text-[#0B8E0F]">
-        {icon}
-      </span>
-      <div>
-        <p className="text-lg font-semibold text-slate-900">{value}</p>
-        <p className="text-xs text-slate-500">{label}</p>
-      </div>
-    </div>
-  );
-}
-
-function percentBadge(percent: number) {
-  const tone =
-    percent >= 80
-      ? "bg-emerald-50 text-emerald-700"
-      : percent >= 50
-        ? "bg-amber-50 text-amber-700"
-        : "bg-rose-50 text-rose-700";
-  return (
-    <span className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ${tone}`}>
-      {percent}%
-    </span>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+import { StatChip } from "@/widgets/user-result/ui/badge-chip";
+import { useResult } from "@/widgets/user-result/hook/useResult";
 
 export default function UserResults() {
   const [query, setQuery] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("barchasi");
+
+  const { columns, result } = useResult();
 
   const subjectOptions = useMemo(
     () => ["barchasi", ...SUBJECT_CATALOG.map((s) => s.id)],
@@ -70,7 +30,7 @@ export default function UserResults() {
   const subjectName = (id: string) =>
     id === "barchasi"
       ? "Barcha fanlar"
-      : SUBJECT_CATALOG.find((s) => s.id === id)?.name ?? id;
+      : (SUBJECT_CATALOG.find((s) => s.id === id)?.name ?? id);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -91,33 +51,6 @@ export default function UserResults() {
       [...RESULT_HISTORY]
         .sort((a, b) => a.dateValue - b.dateValue)
         .map((r) => ({ date: r.date.slice(0, 5), percent: r.percent })),
-    [],
-  );
-
-  const columns = useMemo<ColumnDef<ResultRecord, any>[]>(
-    () => [
-      { accessorKey: "date", header: "Sana" },
-      { accessorKey: "subjectName", header: "Fan" },
-      { accessorKey: "testTitle", header: "Test" },
-      {
-        id: "correct",
-        header: "To'g'ri javoblar",
-        accessorFn: (row) => row.correctCount,
-        cell: ({ row }) =>
-          `${row.original.correctCount} / ${row.original.totalQuestions}`,
-      },
-      { accessorKey: "score", header: "Ball" },
-      {
-        accessorKey: "percent",
-        header: "Foiz",
-        cell: ({ getValue }) => percentBadge(getValue<number>()),
-      },
-      {
-        accessorKey: "durationMinutes",
-        header: "Vaqt",
-        cell: ({ getValue }) => `${getValue<number>()} daqiqa`,
-      },
-    ],
     [],
   );
 
@@ -158,12 +91,22 @@ export default function UserResults() {
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={trendData} margin={{ left: -20, right: 10 }}>
               <defs>
-                <linearGradient id="resultTrendFill" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient
+                  id="resultTrendFill"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
                   <stop offset="0%" stopColor="#0EBE15" stopOpacity={0.25} />
                   <stop offset="100%" stopColor="#0EBE15" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#F1F5F9"
+                vertical={false}
+              />
               <XAxis
                 dataKey="date"
                 tick={{ fontSize: 11, fill: "#94A3B8" }}
@@ -177,7 +120,11 @@ export default function UserResults() {
                 tickLine={false}
               />
               <Tooltip
-                contentStyle={{ borderRadius: 8, borderColor: "#E2E8F0", fontSize: 12 }}
+                contentStyle={{
+                  borderRadius: 8,
+                  borderColor: "#E2E8F0",
+                  fontSize: 12,
+                }}
                 formatter={(value: any) => [`${value}%`, "Natija"]}
               />
               <Area
