@@ -3,14 +3,14 @@ import { FieldRow } from "./field-rox-user-profile";
 import { CheckCircle2, Mail, Pencil, Phone, User, X } from "lucide-react";
 import type { AuthUser } from "@/components/zustand/auth-info";
 
-export default function PersonalInfo({DEMO_USER}: {DEMO_USER: AuthUser}) {
-  const [firstName, lastName] = DEMO_USER.first_name
+export default function PersonalInfo({ DEMO_USER }: { DEMO_USER: AuthUser }) {
+  const { first_name, last_name, phone, email } = DEMO_USER;
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
-    firstName,
-    lastName,
-    phone: DEMO_USER.phone,
-    email: DEMO_USER.email,
+    first_name,
+    last_name,
+    phone,
+    email,
   });
   const [savedMessage, setSavedMessage] = useState(false);
 
@@ -23,10 +23,10 @@ export default function PersonalInfo({DEMO_USER}: {DEMO_USER: AuthUser}) {
 
   const handleCancel = () => {
     setForm({
-      firstName,
-      lastName,
-      phone: DEMO_USER.phone,
-      email: DEMO_USER.email,
+      first_name,
+      last_name,
+      phone,
+      email
     });
     setIsEditing(false);
   };
@@ -77,25 +77,25 @@ export default function PersonalInfo({DEMO_USER}: {DEMO_USER: AuthUser}) {
         <FieldRow
           icon={<User size={16} />}
           label="Ism"
-          value={form.firstName}
+          value={form.first_name}
           editing={isEditing}
-          inputValue={form.firstName}
+          inputValue={form.first_name}
           onChange={(v) => setForm((f) => ({ ...f, firstName: v }))}
         />
         <FieldRow
           icon={<User size={16} />}
           label="Familiya"
-          value={form.lastName}
+          value={form.last_name}
           editing={isEditing}
-          inputValue={form.lastName}
+          inputValue={form.last_name}
           onChange={(v) => setForm((f) => ({ ...f, lastName: v }))}
         />
         <FieldRow
           icon={<Phone size={16} />}
           label="Telefon"
-          value={form.phone||"Telefon raqam kiritilmagan"}
+          value={form.phone || "Telefon raqam kiritilmagan"}
           editing={isEditing}
-          inputValue={form.phone||""}
+          inputValue={form.phone || ""}
           onChange={(v) => setForm((f) => ({ ...f, phone: v }))}
           type="tel"
         />

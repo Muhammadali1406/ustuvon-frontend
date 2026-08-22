@@ -1,58 +1,21 @@
-import { useState } from "react";
 import { CheckCircle2, KeyRound } from "lucide-react";
 import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
-import { isValidPassword } from "@/components/lib/pasword-validators";
+
+import { usePassword } from "../hook/usePassword";
 
 export default function Password() {
-  const [passwordStep, setPasswordStep] = useState<"form" | "verify" | "done">(
-    "form",
-  );
-  const [passwordForm, setPasswordForm] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [code, setCode] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const {
+    passwordForm,
+    passwordStep,
+    handlePasswordSubmit,
+    passwordError,
+    setPasswordForm,
+    handleCodeSubmit,
+    code,
+    setCode,
+    setPasswordStep,
+  } = usePassword();
 
-  const handlePasswordSubmit = () => {
-    if (!passwordForm.oldPassword) {
-      setPasswordError("Eski parolni kiriting");
-      return;
-    }
-    if (!isValidPassword(passwordForm.newPassword)) {
-      setPasswordError(
-        "Yangi parol kamida 9 belgi, 1 harf va 1 maxsus belgidan iborat bo'lishi kerak",
-      );
-      return;
-    }
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setPasswordError("Parollar mos kelmadi");
-      return;
-    }
-    setPasswordError("");
-    // TODO: backend SMS/email kod yuboradi
-    setPasswordStep("verify");
-  };
-
-  const handleCodeSubmit = () => {
-    if (code.trim().length !== 6) {
-      setPasswordError("6 xonali kodni to'liq kiriting");
-      return;
-    }
-    setPasswordError("");
-    // TODO: POST /me/password/confirm
-    setPasswordStep("done");
-    window.setTimeout(() => {
-      setPasswordStep("form");
-      setPasswordForm({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-      setCode("");
-    }, 2500);
-  };
   return (
     <div className="rounded-xl border border-black/8 bg-white p-5">
       <div className="flex items-center gap-2">

@@ -5,9 +5,11 @@ import SertificateUserProfile from "@/widgets/user-profile/ui/user-sertificate";
 import Password from "@/widgets/user-profile/ui/password";
 import { useAuthStore } from "@/components/zustand/auth-info";
 import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
+import { useUserProfile } from "@/widgets/user-profile/hook/useUserProfile";
 
 export default function UserProfile() {
   const user = useAuthStore((state) => state.user);
+  const { certificates } = useUserProfile();
 
   return (
     <div className="space-y-6">
@@ -28,7 +30,7 @@ export default function UserProfile() {
       <PersonalInfo DEMO_USER={user || DEMO_USER} />
 
       {/* Certificates */}
-      <SertificateUserProfile />
+      <SertificateUserProfile certificates={certificates} />
 
       {/* Security — change password */}
       <Password />
