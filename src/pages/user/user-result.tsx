@@ -20,7 +20,7 @@ export default function UserResults() {
   const [query, setQuery] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("barchasi");
 
-  const { columns, result } = useResult();
+  const { columns } = useResult();
 
   const subjectOptions = useMemo(
     () => ["barchasi", ...SUBJECT_CATALOG.map((s) => s.id)],

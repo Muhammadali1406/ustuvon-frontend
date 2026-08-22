@@ -1,5 +1,5 @@
 import { type Subject } from "@/widgets/user-subject/hook/subject-data";
-import { Link } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function SubjectCard({ subject }: { subject: Subject }) {
   const Icon = subject.icon;
