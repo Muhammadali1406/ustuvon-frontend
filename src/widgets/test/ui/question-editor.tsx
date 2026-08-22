@@ -4,7 +4,7 @@
 // qo'lda savol kiritish uchun ham ishlatiladigan bitta komponent.
 
 import { GripVertical, Trash2 } from "lucide-react";
-import type { Question } from "../lib/test-types";
+import type { Question } from "../hook/test-types";
 
 interface QuestionEditorProps {
   index: number;

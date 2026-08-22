@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { UserRow, UserStatus } from "./types-users";
 import { initials } from "./utils";
 import { StatusBadge } from "@/widgets/test";
-import { Ban, Eye, Trash2, UserCheck } from "lucide-react";
+import { Ban, Trash2, UserCheck } from "lucide-react";
 
 interface UserColumnActions {
   onEdit: (id: string) => void;

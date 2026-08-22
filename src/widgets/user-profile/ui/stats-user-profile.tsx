@@ -1,6 +1,5 @@
 import { StatCard } from "./stat-card-user-profile";
 import { Sparkles, Target, Trophy } from "lucide-react";
-import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 
 export default function StatUserProfile() {
   return (
@@ -8,17 +7,17 @@ export default function StatUserProfile() {
       <StatCard
         icon={<Target size={16} />}
         label="Ishlangan testlar"
-        value={`${DEMO_USER.testsTaken} ta`}
+        value={`${0} ta`}
       />
       <StatCard
         icon={<Sparkles size={16} />}
         label="O'rtacha natija"
-        value={`${DEMO_USER.avgScore}%`}
+        value={`${0}%`}
       />
       <StatCard
         icon={<Trophy size={16} />}
         label="Eng yaxshi natija"
-        value={`${DEMO_USER.bestScore}%`}
+        value={`${0}%`}
       />
     </div>
   );

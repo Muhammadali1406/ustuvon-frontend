@@ -42,9 +42,9 @@ export default function SubjectsPage() {
     handleUpdate,
     handleSchedule,
     handleToggleActive,
-    deletePending,
-    updatePending,
-    createPending,
+    // deletePending,
+    // updatePending,
+    // createPending,
   } = useSubjects({ editingSubject, schedulingSubject });
 
   const filteredSubjects = useMemo(() => {
