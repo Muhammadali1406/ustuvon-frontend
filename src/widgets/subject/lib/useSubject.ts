@@ -16,6 +16,7 @@ export function useSubjects({
   schedulingSubject,
 }: UseSubjectsProps) {
   const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
+  const [category, setCatyegory] = useState<string[] | null>(null);
 
   const { data: taxamonyTreeSubject } = useQuery({
     queryKey: [""],
@@ -115,5 +116,6 @@ export function useSubjects({
     deletePending,
     updatePending,
     createPending,
+    category,
   };
 }

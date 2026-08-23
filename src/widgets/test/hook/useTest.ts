@@ -25,7 +25,8 @@ export function useTest() {
   });
 
   useEffect(() => {
-    setTests(data || mockTests);
+    if (data) setTests(data);
+    setTests(mockTests);
   }, [data]);
 
   const handleCreate = (values: TestFormValues) => {
