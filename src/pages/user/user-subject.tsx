@@ -24,6 +24,7 @@ export default function UserSubjects() {
   }, [query, activeCategory]);
 
   const { subjects } = useSubject();
+  console.log("nothing: ", subjects);
 
   return (
     <div className="space-y-6">
