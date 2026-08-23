@@ -17,6 +17,7 @@ import type {
 import { StatusToggle } from "@/widgets/subject/ui/status-togle";
 import { formatDate, formatDateTime } from "@/components/lib/formats";
 import { useSubjects } from "@/widgets/subject/lib/useSubject";
+import { CreateCategoryModal } from "@/components/modals/categoryCreate/createCategoryModel";
 
 type CategoryFilter = SubjectCategory | "Barchasi";
 
@@ -27,6 +28,7 @@ export default function SubjectsPage() {
 
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
+  const [categoryModel, setCategoryModel] = useState(false);
 
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [schedulingSubject, setSchedulingSubject] = useState<Subject | null>(
@@ -48,6 +50,10 @@ export default function SubjectsPage() {
   } = useSubjects({ editingSubject, schedulingSubject });
 
   const filteredSubjects = useMemo(() => {
+    if (categoryFilter === "Qo'shish+") {
+      setCategoryModel(true);
+      setCategoryFilter("Barchasi");
+    }
     return subjects.filter((s) => {
       const matchesSearch = s.name
         .toLowerCase()
@@ -225,6 +231,11 @@ export default function SubjectsPage() {
           {subjects.length} ta
         </p>
       </div>
+
+      <CreateCategoryModal
+        open={categoryModel}
+        onClose={() => setCategoryModel(false)}
+      />
 
       {/* Modallar */}
       <SubjectFormModal

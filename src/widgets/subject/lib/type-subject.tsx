@@ -5,6 +5,7 @@ export const SUBJECT_CATEGORIES = [
   "Chet tillari",
   "Sertifikatlar",
   "DTM",
+  "Qo'shish+"
 ] as const;
 
 export type SubjectCategory = (typeof SUBJECT_CATEGORIES)[number];

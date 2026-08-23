@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { mockSubjects } from "./mock-test-data-subject";
 import type { ScheduledTest, Subject, SubjectFormValues } from "./type-subject";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { toast } from "react-toastify";
@@ -16,6 +16,15 @@ export function useSubjects({
   schedulingSubject,
 }: UseSubjectsProps) {
   const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
+
+  const { data: taxamonyTreeSubject } = useQuery({
+    queryKey: [""],
+    queryFn: () => api.get(links.subjects.taxonomyTree),
+    select: (data) => data.data,
+  });
+  useEffect(() => {
+    console.log("taxamony tree: ", taxamonyTreeSubject);
+  }, [taxamonyTreeSubject]);
 
   const { mutate: deleteSubjects, isPending: deletePending } = useMutation({
     mutationKey: ["subjectDelete"],
