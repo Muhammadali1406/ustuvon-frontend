@@ -26,7 +26,7 @@ export default function TestButtons({ resetAndClose, validateAndSubmit }: TestBu
         onClick={() => validateAndSubmit("Tekshiruvda")}
         className="rounded-md bg-[#12525A] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0D3E44]"
       >
-        Tekshiruvga yuborish
+        Yaratish
       </button>
     </div>
   );

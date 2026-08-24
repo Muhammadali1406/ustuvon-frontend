@@ -9,6 +9,8 @@ import { mockSubjects } from "@/widgets/subject";
 export function useTest() {
   const [tests, setTests] = useState<Test[]>(mockTests);
 
+ 
+
   const { mutate: testDelete } = useMutation({
     mutationKey: [""],
     mutationFn: (id: string | number) =>
