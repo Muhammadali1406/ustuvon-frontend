@@ -9,7 +9,11 @@ export const TEST_FORMATS = [
 
 export type TestFormat = (typeof TEST_FORMATS)[number];
 
-export const TEST_STATUSES = ["Qoralama", "Tekshiruvda", "Nashr qilingan"] as const;
+export const TEST_STATUSES = [
+  "Qoralama",
+  "Tekshiruvda",
+  "Nashr qilingan",
+] as const;
 
 export type TestStatus = (typeof TEST_STATUSES)[number];
 
@@ -49,3 +53,22 @@ export interface TestFormValues {
   status: TestStatus;
   questions: Question[];
 }
+
+type Module = {
+  id: number;
+  title: string;
+  description: string;
+};
+
+export type TaxamonySubject = {
+  id: number;
+  title: string;
+  description?: string;
+  modules: Module[];
+};
+
+export type Taxamony = {
+  id: number;
+  title: string;
+  subjects: TaxamonySubject[];
+};

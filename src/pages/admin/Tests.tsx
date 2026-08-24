@@ -7,7 +7,6 @@ import {
   type TestFormat,
   type TestStatus,
 } from "@/widgets/test/hook/test-types";
-import { mockSubjects } from "@/widgets/subject";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
@@ -27,7 +26,7 @@ export default function TestsPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
 
-  const { tests, handleCreate, handleDelete } = useTest();
+  const { tests, handleDelete } = useTest();
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
@@ -152,8 +151,6 @@ export default function TestsPage() {
       <CreateTestModal
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onSubmit={handleCreate}
-        subjects={mockSubjects.map((s) => ({ id: s.id, name: s.name }))}
       />
 
       <ConfirmDialog

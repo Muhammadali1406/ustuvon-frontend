@@ -1,6 +1,5 @@
 import { Plus, Sparkles } from "lucide-react";
 import { Modal } from "@/widgets/subject";
-import { type TestFormValues } from "@/widgets/test/hook/test-types";
 import TestButtons from "./buttons";
 import { TabButton } from "./tab-button";
 import { QuestionEditor } from "@/widgets/test/ui/question-editor";
@@ -16,18 +15,11 @@ export interface SubjectOption {
 interface CreateTestModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: TestFormValues) => void;
-  subjects: SubjectOption[];
 }
 
 export type AiState = "idle" | "processing" | "review" | "failed";
 
-export function CreateTestModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  subjects,
-}: CreateTestModalProps) {
+export function CreateTestModal({ isOpen, onClose }: CreateTestModalProps) {
   const {
     tab,
     aiState,
@@ -36,14 +28,15 @@ export function CreateTestModal({
     fileName,
     questions,
     error,
-    validateAndSubmit,
     updateQuestion,
     removeQuestion,
     meta,
     setMeta,
     handleFileSelected,
     addManualQuestion,
-  } = useCreateTest({ onClose, onSubmit });
+    handleCreate,
+    taxamonyTree,
+  } = useCreateTest({ onClose });
 
   const canReview = tab === "ai" && aiState === "review";
   const showQuestionList = tab === "manual" || canReview;
@@ -69,7 +62,11 @@ export function CreateTestModal({
         </div>
 
         {/* Umumiy maydonlar */}
-        <Generalfields subjects={subjects} meta={meta} setMeta={setMeta} />
+        <Generalfields
+          taxamonyTree={taxamonyTree}
+          meta={meta}
+          setMeta={setMeta}
+        />
 
         {/* AI tab kontenti */}
         {tab === "ai" && (
@@ -109,10 +106,7 @@ export function CreateTestModal({
       </div>
 
       {/* Amallar */}
-      <TestButtons
-        validateAndSubmit={validateAndSubmit}
-        resetAndClose={resetAndClose}
-      />
+      <TestButtons resetAndClose={resetAndClose} create={handleCreate} />
     </Modal>
   );
 }

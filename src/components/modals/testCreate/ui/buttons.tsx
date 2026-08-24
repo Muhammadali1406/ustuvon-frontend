@@ -1,10 +1,12 @@
-
 interface TestButtonsProps {
-    resetAndClose: () => void;
-    validateAndSubmit: (status: "Qoralama" | "Tekshiruvda") => void;
+  resetAndClose: () => void;
+  create: () => void;
 }
 
-export default function TestButtons({ resetAndClose, validateAndSubmit }: TestButtonsProps) {
+export default function TestButtons({
+  resetAndClose,
+  create,
+}: TestButtonsProps) {
   return (
     <div className="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-4">
       <button
@@ -14,16 +16,16 @@ export default function TestButtons({ resetAndClose, validateAndSubmit }: TestBu
       >
         Bekor qilish
       </button>
-      <button
+      {/* <button
         type="button"
         onClick={() => validateAndSubmit("Qoralama")}
         className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
       >
         Qoralama sifatida saqlash
-      </button>
+      </button> */}
       <button
         type="button"
-        onClick={() => validateAndSubmit("Tekshiruvda")}
+        onClick={create}
         className="rounded-md bg-[#12525A] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0D3E44]"
       >
         Yaratish
