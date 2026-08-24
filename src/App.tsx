@@ -11,7 +11,7 @@ import LoginPage from "./widgets/login/ui/login-page";
 import RegisterPage from "./widgets/register/ui/register-page";
 import PasswordResetPage from "./widgets/reset-pasword/ui/paswordResetPage";
 import { GuestRoute } from "./components/layout/Guestroute";
-//import { ProtectedRoute } from "./components/layout/Protectedroute";
+import { ProtectedRoute } from "./components/layout/Protectedroute";
 import Home from "./pages/user/home";
 import UserSubjects from "./pages/user/user-subject";
 import SubjectDetail from "./pages/user/user-subject-detail";
@@ -58,9 +58,9 @@ function App() {
       <Route
         path="/admin"
         element={
-          // <ProtectedRoute allowedUserTypes={["admin"]}>
-          // </ProtectedRoute>
-          <AdminLayout />
+          <ProtectedRoute allowedUserTypes={["admin"]}>
+            <AdminLayout />
+          </ProtectedRoute>
         }
       >
         <Route index element={<Dashboard />} />
@@ -74,9 +74,9 @@ function App() {
       <Route
         path="/app"
         element={
-          // <ProtectedRoute>
-          // </ProtectedRoute>
-          <UserLayout />
+          <ProtectedRoute>
+            <UserLayout />
+          </ProtectedRoute>
         }
       >
         <Route index element={<Home />} />

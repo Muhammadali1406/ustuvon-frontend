@@ -7,29 +7,29 @@ import { toast } from "react-toastify";
 
 export const useUser = () => {
   const [allUsers, setAllUsers] = useState(buildUsers);
-  
-  const {mutate:userUpdate} = useMutation({
-    mutationKey:[""],
-    mutationFn:(id:string)=>api.patch(links.adminPanel.userDetail(id)),
-    onSuccess:()=>{
-        toast.success("Bajarildi!")
+
+  const { mutate: userUpdate } = useMutation({
+    mutationKey: [""],
+    mutationFn: (id: string) => api.patch(links.adminPanel.userDetail(id)),
+    onSuccess: () => {
+      toast.success("Bajarildi!");
     },
-    onError:(error)=>{
-        console.log("user update error: ", error)
-        toast.error("Xatolik")
-    }
-  })
+    onError: (error) => {
+      console.log("user update error: ", error);
+      toast.error("Xatolik");
+    },
+  });
 
   const { data } = useQuery({
     queryKey: [""],
     queryFn: () => api.get<any>(links.adminPanel.users),
-    select: (data: any) => {
-      return data;
-    },
+    select: (data) => data.data,
   });
 
   useEffect(() => {
-    setAllUsers(data ?? buildUsers);
+    if (data) setAllUsers(data);
+    console.log("user: ", data);
+    setAllUsers(buildUsers);
   }, [data]);
-  return { allUsers , userUpdate };
+  return { allUsers, userUpdate };
 };
