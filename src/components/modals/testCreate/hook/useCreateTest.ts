@@ -192,6 +192,7 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
   const handleCreate = () => {
     validateAndSubmit();
     const subject = mockSubjects.find((s) => s.id === String(meta.subjectId));
+    const wrappedQuestions = questions.map((question) => [question]);
     const newTest = {
       id: `test_${Date.now()}`,
       title: meta.title,
@@ -204,7 +205,7 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
       status: "Nashr qilingan",
       createdAt: new Date().toISOString(),
       createdVia: tab === "ai" ? "ai" : "manual",
-      questions: questions,
+      questions: wrappedQuestions,
     };
     if (tab === "ai") {
       aiCreate({ data: newTest, id: 1 });

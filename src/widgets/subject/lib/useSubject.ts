@@ -25,6 +25,7 @@ export function useSubjects({
   });
   useEffect(() => {
     console.log("taxamony tree: ", taxamonyTreeSubject);
+    setCatyegory(['salom'])
   }, [taxamonyTreeSubject]);
 
   const { mutate: deleteSubjects, isPending: deletePending } = useMutation({
