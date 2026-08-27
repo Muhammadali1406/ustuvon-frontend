@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TEST_FORMATS,
   type Question,
@@ -12,6 +12,11 @@ import {
 import type { AiState } from "../ui/create-test-modal";
 import { createEmptyQuestion } from "@/widgets/test/ui/question-editor";
 import { mockSubjects } from "@/widgets/subject";
+import type {
+  PaginatedParsedQuestions,
+  ParsingJob,
+} from "./teast-create-types";
+import { mapParsedQuestion } from "./utils";
 
 const testTypes = [
   { key: "ielts", label: "IELTS" },
@@ -57,12 +62,77 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("ai");
+  const [jobId, setJobId] = useState<string | null>(null);
+
+  const { data: job } = useQuery({
+    queryKey: ["ai-parser-job", jobId],
+    queryFn: async () => {
+      const { data } = await api.get<ParsingJob>(
+        links.aiParser.jobDetail(jobId!),
+      );
+      return data;
+    },
+    enabled: Boolean(jobId),
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      return status === "pending" || status === "processing" ? 2000 : false;
+    },
+  });
+
+  const { data: parsedQuestions } = useQuery({
+    queryKey: ["ai-parser-job-questions", jobId],
+    queryFn: async () => {
+      const { data } = await api.get<PaginatedParsedQuestions>(
+        links.aiParser.jobQuestions(jobId!),
+      );
+      return data.results;
+    },
+    enabled: Boolean(jobId) && job?.status === "needs_review",
+  });
 
   const { data: taxamonyTree } = useQuery({
     queryKey: ["taxamony-tree"],
     queryFn: async () => {
       const res = await api.get<Taxamony[]>(links.subjects.taxonomyTree);
       return res.data;
+    },
+  });
+
+  useEffect(() => {
+    if (job?.status === "failed") {
+      setAiState("failed");
+      toast.error(
+        job.error_message || "AI test formatlashda xatolik yuz berdi.",
+      );
+    }
+  }, [job?.status, job?.error_message]);
+
+  useEffect(() => {
+    if (parsedQuestions) {
+      setQuestions(parsedQuestions.map(mapParsedQuestion));
+      setAiState("review");
+    }
+  }, [parsedQuestions]);
+
+  const { mutate: fileUpload, isPending: fileUploading } = useMutation({
+    mutationKey: ["ai-parser/jobs/upload"],
+    mutationFn: ({ file, type }: { file: File; type: string }) => {
+      const formData = new FormData();
+      formData.append("source_file", file);
+      formData.append("topic", String(meta.subjectId));
+      formData.append("test_type", type);
+      return api.post<UploadJobResponse>(links.aiParser.jobUpload, formData);
+    },
+    onSuccess: ({ data }) => {
+      setAiState("processing");
+      setJobId(data.id); // ← endi haqiqiy job ID saqlanadi, polling shu yerdan boshlanadi
+    },
+    onError: (error) => {
+      toast.error(
+        "Faylni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+      );
+      console.error("Error uploading file:", error);
+      setAiState("failed");
     },
   });
 
@@ -106,28 +176,6 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
     },
   });
 
-  const { mutate: fileUpload, isPending: fileUploading } = useMutation({
-    mutationKey: ["ai-parser/jobs/upload"],
-    mutationFn: ({ file, type }: { file: File; type: string }) => {
-      const formData = new FormData();
-      formData.append("source_file", file);
-      formData.append("topic", String(meta.subjectId));
-      formData.append("test_type", type);
-      return api.post<UploadJobResponse>(links.aiParser.jobUpload, formData);
-    },
-    onSuccess: ({ data }) => {
-      setAiState("processing");
-      aiQuestions(data.id); // qattiq yozilgan "1" o'rniga haqiqiy job ID
-    },
-    onError: (error) => {
-      toast.error(
-        "Faylni yuklashda xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
-      );
-      console.error("Error uploading file:", error);
-      setAiState("failed");
-    },
-  });
-
   const handleFileSelected = (file: File) => {
     if (file.size > MAX_FILE_SIZE_BYTES) {
       toast.error(
@@ -150,15 +198,11 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
     setQuestions((prev) => prev.map((q) => (q.id === id ? updated : q)));
   };
 
-  const removeQuestion = ({
-    id,
-    jobId = "1",
-  }: {
-    id: string;
-    jobId?: string;
-  }) => {
+  const removeQuestion = ({ id }: { id: string }) => {
     setQuestions((prev) => prev.filter((q) => q.id !== id));
-    tab === "ai" && removeAiQuestion({ jobId, id });
+    if (tab === "ai" && jobId) {
+      removeAiQuestion({ jobId, id }); // "1" o'rniga haqiqiy jobId
+    }
   };
 
   const addManualQuestion = () => {
