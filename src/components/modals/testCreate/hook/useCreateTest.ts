@@ -11,14 +11,14 @@ import {
 } from "@/widgets/test/hook/test-types";
 import type { AiState } from "../ui/create-test-modal";
 import { createEmptyQuestion } from "@/widgets/test/ui/question-editor";
-import { mockSubjects } from "@/widgets/subject";
+// import { mockSubjects } from "@/widgets/subject";
 import type {
   PaginatedParsedQuestions,
   ParsingJob,
 } from "./teast-create-types";
 import { mapParsedQuestion } from "./utils";
 
-const testTypes = [
+export const testTypes = [
   { key: "ielts", label: "IELTS" },
   { key: "sat", label: "SAT" },
   { key: "dtm", label: "DTM" },
@@ -53,9 +53,10 @@ type Tab = "ai" | "manual";
 
 interface CreateTestHookProps {
   onClose: () => void;
+  refetch: () => void;
 }
 
-export function useCreateTest({ onClose }: CreateTestHookProps) {
+export function useCreateTest({ onClose, refetch }: CreateTestHookProps) {
   const [fileName, setFileName] = useState<string | null>(null);
   const [meta, setMeta] = useState(emptyMeta);
   const [aiState, setAiState] = useState<AiState>("idle");
@@ -63,6 +64,16 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("ai");
   const [jobId, setJobId] = useState<string | null>(null);
+
+  const resetAndClose = () => {
+    setTab("ai");
+    setMeta(emptyMeta);
+    setQuestions([]);
+    setAiState("idle");
+    setFileName(null);
+    setError(null);
+    onClose();
+  };
 
   const { data: job } = useQuery({
     queryKey: ["ai-parser-job", jobId],
@@ -93,8 +104,8 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
   const { data: taxamonyTree } = useQuery({
     queryKey: ["taxamony-tree"],
     queryFn: async () => {
-      const res = await api.get<Taxamony[]>(links.subjects.taxonomyTree);
-      return res.data;
+      const restaxa = await api.get<Taxamony[]>(links.subjects.taxonomyTree);
+      return restaxa.data;
     },
   });
 
@@ -137,43 +148,49 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
   });
 
   const { mutate: manualCreate } = useMutation({
-    mutationKey: [""],
+    mutationKey: ["examinations"],
     mutationFn: ({ data }: any) => api.post(links.exams.examinations, data),
     onSuccess: () => {
-      console.log("manual");
+      toast.success("Muvaffaqiyatli yaratildi");
+      refetch();
     },
     onError: (error) => {
       console.log("create exam: ", error);
-      console.log("manual");
+      toast.error("Xatolik");
+    },
+  });
+
+  const { mutate: aiPublish } = useMutation({
+    mutationKey: ["pubish"],
+    mutationFn: () => api.post(links.aiParser.jobPublish(jobId || "")),
+    onSuccess: () => {
+      toast.success("Test muvaffaqiyatli yaratildi!!!");
+      resetAndClose();
+      refetch();
+    },
+    onError: (error) => {
+      console.log("ai publish: ", error);
+      toast.error("Xatolik!!!");
     },
   });
 
   const { mutate: aiCreate } = useMutation({
-    mutationKey: [""],
+    mutationKey: ["confirm-all"],
     mutationFn: ({ data, id }: any) =>
       api.post(links.aiParser.jobQuestionsConfirmAll(String(id)), data),
     onSuccess: () => {
-      console.log("ai");
+      aiPublish();
     },
     onError: (error) => {
       console.log("create exam: ", error);
-      console.log("ai");
+      toast.error("Testni tasdiqlashda hatolik");
     },
   });
 
   const { mutate: removeAiQuestion } = useMutation({
-    mutationKey: [],
+    mutationKey: ["questions"],
     mutationFn: ({ jobId, id }: { jobId: string; id: string }) =>
       api.delete(links.aiParser.jobQuestionDetail(jobId, id)),
-  });
-
-  const { mutate: aiQuestions } = useMutation({
-    mutationKey: ["ai-parser/jobs/questions"],
-    mutationFn: (id: string) => api.get(links.aiParser.jobQuestions(id)),
-    onSuccess: (data: any) => {
-      setQuestions(data);
-      setAiState("review");
-    },
   });
 
   const handleFileSelected = (file: File) => {
@@ -223,25 +240,17 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
     resetAndClose();
   };
 
-  const resetAndClose = () => {
-    setTab("ai");
-    setMeta(emptyMeta);
-    setQuestions([]);
-    setAiState("idle");
-    setFileName(null);
-    setError(null);
-    onClose();
-  };
-
   const handleCreate = () => {
     validateAndSubmit();
-    const subject = mockSubjects.find((s) => s.id === String(meta.subjectId));
+    console.log("meta : ",meta)
+    const subject =
+      taxamonyTree && taxamonyTree.find((s) => s.id === meta.subjectId);
     const wrappedQuestions = questions.map((question) => [question]);
     const newTest = {
       id: `test_${Date.now()}`,
       title: meta.title,
       subjectId: meta.subjectId,
-      subjectName: subject?.name ?? "—",
+      subjectName: subject?.title ?? "—",
       format: meta.format,
       questionsCount: questions.length,
       totalBall: questions.reduce((sum, q) => sum + q.ball, 0),
@@ -252,7 +261,7 @@ export function useCreateTest({ onClose }: CreateTestHookProps) {
       questions: wrappedQuestions,
     };
     if (tab === "ai") {
-      aiCreate({ data: newTest, id: 1 });
+      aiCreate({ data: newTest, id: jobId });
     } else {
       manualCreate({ data: newTest });
     }

@@ -15,11 +15,12 @@ export interface SubjectOption {
 interface CreateTestModalProps {
   isOpen: boolean;
   onClose: () => void;
+  refetch:()=>void
 }
 
 export type AiState = "idle" | "processing" | "review" | "failed";
 
-export function CreateTestModal({ isOpen, onClose }: CreateTestModalProps) {
+export function CreateTestModal({ isOpen, onClose,refetch }: CreateTestModalProps) {
   const {
     tab,
     aiState,
@@ -36,7 +37,7 @@ export function CreateTestModal({ isOpen, onClose }: CreateTestModalProps) {
     addManualQuestion,
     handleCreate,
     taxamonyTree,
-  } = useCreateTest({ onClose });
+  } = useCreateTest({ onClose,refetch });
 
   const canReview = tab === "ai" && aiState === "review";
   const showQuestionList = tab === "manual" || canReview;

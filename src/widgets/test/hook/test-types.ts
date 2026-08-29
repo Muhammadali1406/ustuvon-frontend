@@ -69,6 +69,6 @@ export type TaxamonySubject = {
 
 export type Taxamony = {
   id: number;
-  title: string;
+  title: TestFormat;
   subjects: TaxamonySubject[];
 };

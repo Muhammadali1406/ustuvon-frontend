@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
 import { FileQuestion, Plus, Search } from "lucide-react";
 import {
-  TEST_FORMATS,
-  TEST_STATUSES,
+  // TEST_STATUSES,
   type Test,
   type TestFormat,
-  type TestStatus,
+  // type TestStatus,
 } from "@/widgets/test/hook/test-types";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
@@ -16,17 +15,17 @@ import { CreateTestModal } from "@/components/modals/testCreate/ui/create-test-m
 import { useTest } from "@/widgets/test/hook/useTest";
 
 type FormatFilter = TestFormat | "Barchasi";
-type StatusFilter = TestStatus | "Barchasi";
+// type StatusFilter = TestStatus | "Barchasi";
 
 export default function TestsPage() {
   const [search, setSearch] = useState("");
   const [formatFilter, setFormatFilter] = useState<FormatFilter>("Barchasi");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("Barchasi");
+  // const [statusFilter, setStatusFilter] = useState<StatusFilter>("Barchasi");
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
 
-  const { tests, handleDelete } = useTest();
+  const { tests, handleDelete, refetch, taxamonyTree } = useTest();
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
@@ -35,11 +34,11 @@ export default function TestsPage() {
         .includes(search.trim().toLowerCase());
       const matchesFormat =
         formatFilter === "Barchasi" || t.format === formatFilter;
-      const matchesStatus =
-        statusFilter === "Barchasi" || t.status === statusFilter;
-      return matchesSearch && matchesFormat && matchesStatus;
+      // const matchesStatus =
+      // statusFilter === "Barchasi" || t.status === statusFilter;
+      return matchesSearch && matchesFormat;
     });
-  }, [tests, search, formatFilter, statusFilter]);
+  }, [tests, search, formatFilter]);
 
   const summary = useMemo(
     () => ({
@@ -83,7 +82,7 @@ export default function TestsPage() {
             value={summary.published}
             accent="#3F7D58"
           />
-          <SummaryCard
+          {/* <SummaryCard
             label="Tekshiruvda"
             value={summary.review}
             accent="#C79A3E"
@@ -92,7 +91,7 @@ export default function TestsPage() {
             label="Qoralamalar"
             value={summary.draft}
             accent="#64748B"
-          />
+          /> */}
         </div>
 
         {/* Filtrlar */}
@@ -115,14 +114,14 @@ export default function TestsPage() {
             value={formatFilter}
             onChange={(v) => setFormatFilter(v as FormatFilter)}
             allLabel="Barcha formatlar"
-            options={TEST_FORMATS}
+            options={taxamonyTree || []}
           />
-          <SelectFilter
+          {/* <SelectFilter
             value={statusFilter}
             onChange={(v) => setStatusFilter(v as StatusFilter)}
             allLabel="Barcha holatlar"
             options={TEST_STATUSES}
-          />
+          /> */}
         </div>
 
         {/* Jadval */}
@@ -151,6 +150,7 @@ export default function TestsPage() {
       <CreateTestModal
         isOpen={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
+        refetch={refetch}
       />
 
       <ConfirmDialog

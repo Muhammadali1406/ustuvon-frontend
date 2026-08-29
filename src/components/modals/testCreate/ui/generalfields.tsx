@@ -18,6 +18,8 @@ export default function Generalfields({
   taxamonyTree,
 }: GeneralfieldsProps) {
   const [subjects, setSubjects] = useState<TaxamonySubject[] | null>(null);
+  console.log("create test: ", subjects);
+  console.log("create test: ", taxamonyTree);
   return (
     <div className="mt-4 grid grid-cols-2 gap-3">
       <div className="col-span-2">
@@ -68,14 +70,14 @@ export default function Generalfields({
                 format: e.target.value as TestFormValues["format"],
               }));
               const subject = taxamonyTree.find(
-                (t) => t.id === Number(e.target.value),
+                (t) => t.title === e.target.value,
               );
               setSubjects(subject?.subjects || []);
             }}
             className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#12525A] focus:outline-none focus:ring-1 focus:ring-[#12525A]"
           >
             {taxamonyTree.map((f) => (
-              <option key={f.id} value={f.id}>
+              <option key={f.id} value={f.title}>
                 {f.title}
               </option>
             ))}

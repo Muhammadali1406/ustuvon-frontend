@@ -2,21 +2,16 @@ import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { mockTests } from "./mock-test-data-test";
-import type { Test } from "./test-types";
-import { useEffect, useState } from "react";
+import type { Taxamony, Test } from "./test-types";
 
 export function useTest() {
-  const [tests, setTests] = useState<Test[]>(mockTests);
-
- 
-
   const { mutate: testDelete } = useMutation({
     mutationKey: [""],
     mutationFn: (id: string | number) =>
       api.delete(links.exams.examinationDetail(id)),
   });
 
-  const { data } = useQuery({
+  const { data: tests, refetch } = useQuery({
     queryKey: [""],
     queryFn: () => api.get(links.exams.examinations),
     select: (data) => {
@@ -25,12 +20,19 @@ export function useTest() {
     },
   });
 
-  useEffect(() => {
-    if (data) setTests(data);
-    setTests(mockTests);
-  }, [data]);
-
- 
+  const { data: taxamonyTree } = useQuery({
+    queryKey: ["taxamony-tree"],
+    queryFn: async () => {
+      const resTaxamony = await api.get<Taxamony[]>(
+        links.subjects.taxonomyTree,
+      );
+      return resTaxamony.data;
+    },
+    select: (data) => {
+      const taxonomyTitles = data.map((item) => item.title);
+      return taxonomyTitles;
+    },
+  });
 
   // function handleDuplicate(test: Test) {
   //   const copy: Test = {
@@ -44,9 +46,8 @@ export function useTest() {
   // }
 
   const handleDelete = (test: Test) => {
-    setTests((prev) => prev.filter((t) => t.id !== test.id));
     testDelete(test.id);
   };
 
-  return { tests, setTests, handleDelete };
+  return { tests: tests || mockTests, handleDelete, refetch, taxamonyTree };
 }
