@@ -30,10 +30,8 @@ export function useCreateCategory(onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (payload: CreateCategoryPayload) => {
-      const { data } = await api.post(links.subjects.categoryCreate, payload);
-      return data;
-    },
+    mutationFn: (payload: CreateCategoryPayload) =>
+      api.post(links.subjects.categoryCreate, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subjects-taxonomy"] });
       toast.success("Yaratildi!");

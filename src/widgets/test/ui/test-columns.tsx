@@ -1,77 +1,74 @@
-// src/pages/admin/tests/testsColumns.tsx
 import type { ColumnDef } from "@tanstack/react-table";
-import { Copy, Pencil, Sparkles, Trash2, User } from "lucide-react";
-import { StatusBadge } from "./status-badge";
-import type { Test } from "../hook/test-types";
+import { Pencil, Trash2 } from "lucide-react";
+import { formatRawLabel, type Test } from "../hook/test-types";
 
 interface ColumnActions {
   onEdit?: (test: Test) => void;
-  onDuplicate?: (test: Test) => void;
   onDelete: (test: Test) => void;
 }
 
 export function buildTestsColumns({
   onEdit,
-  onDuplicate,
   onDelete,
 }: ColumnActions): ColumnDef<Test, any>[] {
   return [
     {
       accessorKey: "title",
       header: "Test",
-      cell: (info) => {
-        const test = info.row.original;
-        return (
-          <div>
-            <p className="font-medium text-slate-900">{test.title}</p>
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400">
-              {test.createdVia === "ai" ? (
-                <>
-                  <Sparkles size={11} /> AI orqali yaratilgan
-                </>
-              ) : (
-                <>
-                  <User size={11} /> Qo'lda kiritilgan
-                </>
-              )}
-            </p>
-          </div>
-        );
-      },
+      cell: (info) => (
+        <p className="font-medium text-slate-900">
+          {info.getValue() as string}
+        </p>
+      ),
     },
     {
-      accessorKey: "subjectName",
-      header: "Fan",
-    },
-    {
-      accessorKey: "format",
+      accessorKey: "test_type",
       header: "Format",
       cell: (info) => (
         <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+          {formatRawLabel(info.getValue() as string)}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "level",
+      header: "Daraja",
+      cell: (info) => (
+        <span className="rounded-md bg-slate-50 px-2 py-0.5 text-xs font-medium uppercase text-slate-500">
           {info.getValue() as string}
         </span>
       ),
     },
     {
-      accessorKey: "questionsCount",
+      accessorKey: "questions_count",
       header: "Savollar",
     },
     {
-      accessorKey: "totalBall",
-      header: "Ball",
+      accessorKey: "transition_assessment",
+      header: "O'tish chegarasi",
+      cell: (info) => `${info.getValue()}%`,
     },
     {
-      accessorKey: "durationMinutes",
+      accessorKey: "duration_time",
       header: "Vaqt",
       cell: (info) => `${info.getValue()} daq`,
     },
     {
-      accessorKey: "status",
+      accessorKey: "is_active",
       header: "Holati",
-      cell: (info) => <StatusBadge status={info.getValue()} />,
+      cell: (info) =>
+        info.getValue() ? (
+          <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+            Faol
+          </span>
+        ) : (
+          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+            Nofaol
+          </span>
+        ),
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "created_at",
       header: "Yaratilgan",
       cell: (info) =>
         new Date(info.getValue() as string).toLocaleDateString("uz-UZ"),
@@ -90,13 +87,6 @@ export function buildTestsColumns({
               aria-label="Tahrirlash"
             >
               <Pencil size={16} />
-            </button>
-            <button
-              onClick={() => onDuplicate?.(test)}
-              className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-              aria-label="Nusxa olish"
-            >
-              <Copy size={16} />
             </button>
             <button
               onClick={() => onDelete(test)}

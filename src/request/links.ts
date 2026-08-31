@@ -1,4 +1,5 @@
 import type { Subject } from "@/widgets/subject/lib/type-subject";
+import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 const API_ORIGIN = import.meta.env.VITE_API_BASE_URL ?? "";
 const API_BASE = `${API_ORIGIN}/api/v1`;
@@ -32,13 +33,13 @@ export const links = {
 
   subjects: {
     taxonomyTree: `${API_BASE}/subjects/taxanomy-tree/`, // backend'dagi imlo shu (qarang: yuqoridagi eslatma)
-    categoryCreate: `${API_BASE}/subjects/category_create`, // oxirida "/" yo'q
+    categoryCreate: `${API_BASE}/subjects/category_create/`, // oxirida "/" yo'q
     categoryUpdate: (id: number | string) =>
       `${API_BASE}/subjects/category_update/${id}/`,
     categoryDelete: (id: number | string) =>
       `${API_BASE}/subjects/category_delete/${id}/`,
     subjectCreate: `${API_BASE}/subjects/subject_create/`,
-    subjectUpdate: (data: Subject) =>
+    subjectUpdate: (data: TaxamonySubject) =>
       `${API_BASE}/subjects/subject_update/${data}/`,
     subjectDelete: (id: number | string) =>
       `${API_BASE}/subjects/subject_delete/${id}/`,

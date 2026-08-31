@@ -240,32 +240,39 @@ export function useCreateTest({ onClose, refetch }: CreateTestHookProps) {
     resetAndClose();
   };
 
-  const handleCreate = () => {
-    validateAndSubmit();
-    console.log("meta : ",meta)
-    const subject =
-      taxamonyTree && taxamonyTree.find((s) => s.id === meta.subjectId);
-    const wrappedQuestions = questions.map((question) => [question]);
-    const newTest = {
-      id: `test_${Date.now()}`,
-      title: meta.title,
-      subjectId: meta.subjectId,
-      subjectName: subject?.title ?? "—",
-      format: meta.format,
-      questionsCount: questions.length,
-      totalBall: questions.reduce((sum, q) => sum + q.ball, 0),
-      durationMinutes: meta.durationMinutes,
-      status: "Nashr qilingan",
-      createdAt: new Date().toISOString(),
-      createdVia: tab === "ai" ? "ai" : "manual",
-      questions: wrappedQuestions,
-    };
-    if (tab === "ai") {
-      aiCreate({ data: newTest, id: jobId });
-    } else {
-      manualCreate({ data: newTest });
-    }
+const handleCreate = () => {
+  validateAndSubmit();
+
+  const subject =
+    taxamonyTree && taxamonyTree.find((s) => s.id === meta.subjectId);
+
+  const wrappedQuestions = questions.map((question) => {
+    if (tab === "ai") return [question];
+    const { id, ...rest } = question;
+    return [rest];
+  });
+
+  const newTest = {
+    ...(tab === "ai" ? { id: `test_${Date.now()}` } : {}),
+    title: meta.title,
+    subjectId: meta.subjectId,
+    subjectName: subject?.title ?? "—",
+    format: meta.format,
+    questionsCount: questions.length,
+    totalBall: questions.reduce((sum, q) => sum + q.ball, 0),
+    durationMinutes: meta.durationMinutes,
+    status: "Nashr qilingan",
+    createdAt: new Date().toISOString(),
+    createdVia: tab === "ai" ? "ai" : "manual",
+    questions: wrappedQuestions,
   };
+
+  if (tab === "ai") {
+    aiCreate({ data: newTest, id: jobId });
+  } else {
+    manualCreate({ data: newTest });
+  }
+};
 
   return {
     handleCreate,

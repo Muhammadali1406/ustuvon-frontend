@@ -1,11 +1,6 @@
 import { useMemo, useState } from "react";
 import { FileQuestion, Plus, Search } from "lucide-react";
-import {
-  // TEST_STATUSES,
-  type Test,
-  type TestFormat,
-  // type TestStatus,
-} from "@/widgets/test/hook/test-types";
+import { type Test } from "@/widgets/test/hook/test-types";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildTestsColumns } from "@/widgets/test/ui/test-columns";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
@@ -14,18 +9,24 @@ import { SelectFilter } from "@/widgets/test/ui/select-filter";
 import { CreateTestModal } from "@/components/modals/testCreate/ui/create-test-modal";
 import { useTest } from "@/widgets/test/hook/useTest";
 
-type FormatFilter = TestFormat | "Barchasi";
-// type StatusFilter = TestStatus | "Barchasi";
+const ALL_FORMATS = "Barchasi";
 
 export default function TestsPage() {
   const [search, setSearch] = useState("");
-  const [formatFilter, setFormatFilter] = useState<FormatFilter>("Barchasi");
-  // const [statusFilter, setStatusFilter] = useState<StatusFilter>("Barchasi");
+  const [formatFilter, setFormatFilter] = useState<string>(ALL_FORMATS);
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
 
-  const { tests, handleDelete, refetch, taxamonyTree } = useTest();
+  const { tests, handleDelete, refetch } = useTest();
+
+  // Filtr variantlarini taxamonyTree'dan emas, HAQIQIY ma'lumotdagi
+  // test_type qiymatlaridan hosil qilamiz — shunda katta/kichik harf yoki
+  // "_" bilan bo'shliq nomutanosibligi bo'lmaydi, filtr har doim mos keladi.
+  const availableFormats = useMemo(
+    () => [...new Set(tests.map((t) => t.test_type))],
+    [tests],
+  );
 
   const filteredTests = useMemo(() => {
     return tests.filter((t) => {
@@ -33,9 +34,7 @@ export default function TestsPage() {
         .toLowerCase()
         .includes(search.trim().toLowerCase());
       const matchesFormat =
-        formatFilter === "Barchasi" || t.format === formatFilter;
-      // const matchesStatus =
-      // statusFilter === "Barchasi" || t.status === statusFilter;
+        formatFilter === ALL_FORMATS || t.test_type === formatFilter;
       return matchesSearch && matchesFormat;
     });
   }, [tests, search, formatFilter]);
@@ -43,9 +42,9 @@ export default function TestsPage() {
   const summary = useMemo(
     () => ({
       total: tests.length,
-      published: tests.filter((t) => t.status === "Nashr qilingan").length,
-      review: tests.filter((t) => t.status === "Tekshiruvda").length,
-      draft: tests.filter((t) => t.status === "Qoralama").length,
+      active: tests.filter((t) => t.is_active).length,
+      inactive: tests.filter((t) => !t.is_active).length,
+      totalQuestions: tests.reduce((sum, t) => sum + t.questions_count, 0),
     }),
     [tests],
   );
@@ -78,20 +77,16 @@ export default function TestsPage() {
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <SummaryCard label="Jami testlar" value={summary.total} />
           <SummaryCard
-            label="Nashr qilingan"
-            value={summary.published}
+            label="Faol testlar"
+            value={summary.active}
             accent="#3F7D58"
           />
-          {/* <SummaryCard
-            label="Tekshiruvda"
-            value={summary.review}
-            accent="#C79A3E"
-          />
           <SummaryCard
-            label="Qoralamalar"
-            value={summary.draft}
+            label="Nofaol testlar"
+            value={summary.inactive}
             accent="#64748B"
-          /> */}
+          />
+          <SummaryCard label="Jami savollar" value={summary.totalQuestions} />
         </div>
 
         {/* Filtrlar */}
@@ -112,24 +107,20 @@ export default function TestsPage() {
 
           <SelectFilter
             value={formatFilter}
-            onChange={(v) => setFormatFilter(v as FormatFilter)}
+            onChange={(v) => setFormatFilter(v)}
             allLabel="Barcha formatlar"
-            options={taxamonyTree || []}
+            options={availableFormats}
+            // SelectFilter ichida qiymatni ko'rsatishda formatRawLabel
+            // bilan o'qiladigan shaklga o'girib chiqarishga moslashtiring
+            // (masalan "milliy_sertifikat" -> "Milliy Sertifikat"). value
+            // baribir xom test_type bo'lib qoladi, faqat LABEL o'zgaradi.
           />
-          {/* <SelectFilter
-            value={statusFilter}
-            onChange={(v) => setStatusFilter(v as StatusFilter)}
-            allLabel="Barcha holatlar"
-            options={TEST_STATUSES}
-          /> */}
         </div>
 
         {/* Jadval */}
         <div className="mt-5">
           <DataTable
             columns={buildTestsColumns({
-              // onEdit: handleEdit,
-              // onDuplicate: handleDuplicate,
               onDelete: (test) => setDeleteTarget(test),
             })}
             data={filteredTests}

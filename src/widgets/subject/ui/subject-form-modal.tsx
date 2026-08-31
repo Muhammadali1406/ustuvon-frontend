@@ -6,18 +6,18 @@ import {
   type SubjectFormValues,
 } from "../lib/type-subject";
 import { Modal } from "./modal";
+import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 interface SubjectFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (values: SubjectFormValues) => void;
-  initialValues?: Subject | null; // berilsa - tahrirlash rejimi
+  initialValues?: TaxamonySubject | null; // berilsa - tahrirlash rejimi
 }
 
 const emptyValues: SubjectFormValues = {
   name: "",
   category: SUBJECT_CATEGORIES[0],
-  isActive: true,
 };
 
 export function SubjectFormModal({
@@ -36,9 +36,8 @@ export function SubjectFormModal({
       setValues(
         initialValues
           ? {
-              name: initialValues.name,
-              category: initialValues.category,
-              isActive: initialValues.isActive,
+              name: initialValues.title,
+              category: "DTM",
             }
           : emptyValues,
       );
@@ -111,18 +110,6 @@ export function SubjectFormModal({
             ))}
           </select>
         </div>
-
-        <label className="flex items-center gap-2 text-sm text-slate-700">
-          <input
-            type="checkbox"
-            checked={values.isActive}
-            onChange={(e) =>
-              setValues((v) => ({ ...v, isActive: e.target.checked }))
-            }
-            className="h-4 w-4 rounded border-slate-300 text-[#12525A] focus:ring-[#12525A]"
-          />
-          Fan faol (foydalanuvchilarga ko'rinadi)
-        </label>
 
         <div className="mt-2 flex justify-end gap-2 border-t border-slate-100 pt-4">
           <button

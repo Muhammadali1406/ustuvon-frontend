@@ -32,17 +32,17 @@ export interface Question {
 }
 
 export interface Test {
-  id: string;
+  id: number;
   title: string;
-  subjectId: string;
-  subjectName: string; // ko'rsatish uchun denormalize qilingan
-  format: TestFormat;
-  questionsCount: number;
-  totalBall: number;
-  durationMinutes: number;
-  status: TestStatus;
-  createdAt: string; // ISO
-  createdVia: "ai" | "manual";
+  duration_time: number; // daqiqa
+  // Taxmin: "o'tish chegarasi" foizda. Backend bilan tasdiqlanmagan —
+  // aniq ma'nosini tekshiring.
+  transition_assessment: number;
+  test_type: string;
+  level: string;
+  questions_count: number;
+  is_active: boolean;
+  created_at: string; // ISO
 }
 
 export interface TestFormValues {
@@ -72,3 +72,12 @@ export type Taxamony = {
   title: TestFormat;
   subjects: TaxamonySubject[];
 };
+
+
+export function formatRawLabel(value: string): string {
+  return value
+    .split(/[_\s]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}

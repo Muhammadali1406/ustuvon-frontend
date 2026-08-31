@@ -1,83 +1,91 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Plus, Search } from "lucide-react";
-import {
-  CategoryBadge,
-  EmptyState,
-  SUBJECT_CATEGORIES,
-} from "@/widgets/subject";
+import { CategoryBadge, EmptyState } from "@/widgets/subject";
 import { SubjectFormModal } from "@/widgets/subject/ui/subject-form-modal";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
-import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
+// import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildSubjectsColumns } from "@/widgets/subject/ui/subject-column";
-import type {
-  Subject,
-  SubjectCategory,
-} from "@/widgets/subject/lib/type-subject";
+// import type { Subject } from "@/widgets/subject/lib/type-subject";
 import { StatusToggle } from "@/widgets/subject/ui/status-togle";
 import { formatDate, formatDateTime } from "@/components/lib/formats";
 import { useSubjects } from "@/widgets/subject/lib/useSubject";
 import { CreateCategoryModal } from "@/components/modals/categoryCreate/createCategoryModel";
-
-type CategoryFilter = SubjectCategory | "Barchasi";
+import type { Taxamony, TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 export default function SubjectsPage() {
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] =
-    useState<CategoryFilter>("Barchasi");
+  const [categoryFilter, setCategoryFilter] = useState<string>("Barchasi");
 
   const [formModalOpen, setFormModalOpen] = useState(false);
-  const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
+  const [editingSubject, setEditingSubject] = useState<TaxamonySubject | null>(
+    null,
+  );
   const [categoryModel, setCategoryModel] = useState(false);
 
-  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-  const [schedulingSubject, setSchedulingSubject] = useState<Subject | null>(
+  // const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  // const [schedulingSubject, setSchedulingSubject] =
+  //   useState<TaxamonySubject | null>(null);
+
+  const [deleteTarget, setDeleteTarget] = useState<TaxamonySubject | null>(
     null,
   );
 
-  const [deleteTarget, setDeleteTarget] = useState<Subject | null>(null);
-
   const {
-    subjects,
     handleCreate,
     handleDelete,
     handleUpdate,
-    handleSchedule,
     handleToggleActive,
+    taxamonyTreeSubject,
     // deletePending,
     // updatePending,
     // createPending,
-  } = useSubjects({ editingSubject, schedulingSubject });
+  } = useSubjects({ editingSubject });
 
-  const filteredSubjects = useMemo(() => {
+  useEffect(() => {
     if (categoryFilter === "Qo'shish+") {
       setCategoryModel(true);
       setCategoryFilter("Barchasi");
     }
-    return subjects.filter((s) => {
-      const matchesSearch = s.name
-        .toLowerCase()
-        .includes(search.trim().toLowerCase());
-      const matchesCategory =
-        categoryFilter === "Barchasi" || s.category === categoryFilter;
-      return matchesSearch && matchesCategory;
-    });
-  }, [subjects, search, categoryFilter]);
+  }, [categoryFilter]);
+
+  const filteredSubjects = useMemo((): TaxamonySubject[] => {
+    if (!taxamonyTreeSubject) return [];
+
+    const matchingGroups =
+      categoryFilter === "Barchasi"
+        ? taxamonyTreeSubject
+        : taxamonyTreeSubject.filter(
+            (item: Taxamony) => item.title === categoryFilter,
+          );
+
+    const allSubjects = matchingGroups.flatMap(
+      (item: Taxamony) => item.subjects,
+    );
+
+    const query = search.trim().toLowerCase();
+    if (!query) return allSubjects;
+
+    return allSubjects.filter((subject: TaxamonySubject) =>
+      subject.title.toLowerCase().includes(query),
+    );
+  }, [taxamonyTreeSubject, search, categoryFilter]);
+  console.log(filteredSubjects);
 
   const openCreateModal = () => {
     setEditingSubject(null);
     setFormModalOpen(true);
   };
 
-  const openEditModal = (subject: Subject) => {
-    setEditingSubject(subject);
-    setFormModalOpen(true);
-  };
+  // const openEditModal = (subject: TaxamonySubject) => {
+  //   setEditingSubject(subject);
+  //   setFormModalOpen(true);
+  // };
 
-  const openScheduleModal = (subject: Subject) => {
-    setSchedulingSubject(subject);
-    setScheduleModalOpen(true);
-  };
+  // const openScheduleModal = (subject: TaxamonySubject) => {
+  //   setSchedulingSubject(subject);
+  //   setScheduleModalOpen(true);
+  // };
 
   return (
     <div className="h-full">
@@ -114,7 +122,7 @@ export default function SubjectsPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Fan nomi bo'yicha qidirish..."
+              placeholder="Turkum nomi bo'yicha qidirish..."
               className="w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#12525A] focus:outline-none focus:ring-1 focus:ring-[#12525A]"
             />
           </div>
@@ -122,17 +130,17 @@ export default function SubjectsPage() {
           <div className="relative">
             <select
               value={categoryFilter}
-              onChange={(e) =>
-                setCategoryFilter(e.target.value as CategoryFilter)
-              }
+              onChange={(e) => setCategoryFilter(e.target.value)}
               className="appearance-none rounded-md border border-slate-300 bg-white py-2 pl-3 pr-9 text-sm text-slate-700 focus:border-[#12525A] focus:outline-none focus:ring-1 focus:ring-[#12525A]"
             >
               <option value="Barchasi">Barcha turkumlar</option>
-              {SUBJECT_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
+              {taxamonyTreeSubject &&
+                taxamonyTreeSubject.map((cat: Taxamony) => (
+                  <option key={cat.id} value={cat.title}>
+                    {cat.title}
+                  </option>
+                ))}
+              <option value="Qo'shish+">Qo'shish+</option>
             </select>
             <ChevronDown
               size={14}
@@ -145,7 +153,7 @@ export default function SubjectsPage() {
         <div className="mt-5 overflow-hidden rounded-lg border border-slate-200 bg-white">
           {filteredSubjects.length === 0 ? (
             <EmptyState
-              hasSubjects={subjects.length > 0}
+              hasSubjects={filteredSubjects.length > 0}
               onCreate={openCreateModal}
             />
           ) : (
@@ -153,29 +161,29 @@ export default function SubjectsPage() {
               {/* Desktop jadval */}
               <DataTable
                 columns={buildSubjectsColumns({
-                  onSchedule: openScheduleModal,
-                  onEdit: openEditModal,
+                  // onSchedule: openScheduleModal,
+                  // onEdit: openEditModal,
                   onDelete: setDeleteTarget,
-                  onToggleActive: handleToggleActive,
+                  // onToggleActive: handleToggleActive,
                 })}
                 data={filteredSubjects}
               />
 
               {/* Mobil kartalar */}
               <ul className="divide-y divide-slate-100 sm:hidden">
-                {filteredSubjects.map((subject) => (
+                {filteredSubjects.map((subject: any) => (
                   <li key={subject.id} className="px-4 py-4">
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-medium text-slate-900">
-                          {subject.name}
+                          {subject.title}
                         </p>
                         <div className="mt-1">
                           <CategoryBadge category={subject.category} />
                         </div>
                       </div>
                       <StatusToggle
-                        isActive={subject.isActive}
+                        isActive={true}
                         onToggle={() => handleToggleActive(subject)}
                       />
                     </div>
@@ -200,18 +208,18 @@ export default function SubjectsPage() {
                     </dl>
 
                     <div className="mt-3 flex gap-2">
-                      <button
+                      {/* <button
                         onClick={() => openScheduleModal(subject)}
                         className="flex-1 rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-700"
                       >
                         Rejalashtirish
-                      </button>
-                      <button
+                      </button> */}
+                      {/* <button
                         onClick={() => openEditModal(subject)}
                         className="flex-1 rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-700"
                       >
                         Tahrirlash
-                      </button>
+                      </button> */}
                       <button
                         onClick={() => setDeleteTarget(subject)}
                         className="flex-1 rounded-md border border-[#B3423B]/30 py-1.5 text-xs font-medium text-[#B3423B]"
@@ -228,7 +236,7 @@ export default function SubjectsPage() {
 
         <p className="mt-3 text-xs text-slate-400">
           {filteredSubjects.length} ta fan ko'rsatilmoqda / jami{" "}
-          {subjects.length} ta
+          {filteredSubjects.length} ta
         </p>
       </div>
 
@@ -245,19 +253,19 @@ export default function SubjectsPage() {
         initialValues={editingSubject}
       />
 
-      <ScheduleTestModal
+      {/* <ScheduleTestModal
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}
         onSubmit={handleSchedule}
         subject={schedulingSubject}
-      />
+      /> */}
 
       <ConfirmDialog
         isOpen={Boolean(deleteTarget)}
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
         title="Fanni o'chirmoqchimisiz?"
-        description={`"${deleteTarget?.name}" fani va unga bog'liq barcha testlar ro'yxatdan olib tashlanadi. Bu amalni bekor qilib bo'lmaydi.`}
+        description={`"${deleteTarget?.title}" fani va unga bog'liq barcha testlar ro'yxatdan olib tashlanadi. Bu amalni bekor qilib bo'lmaydi.`}
         confirmLabel="Ha, o'chirish"
       />
     </div>

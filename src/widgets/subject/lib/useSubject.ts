@@ -1,32 +1,24 @@
-import { useEffect, useState } from "react";
-import { mockSubjects } from "./mock-test-data-subject";
 import type { ScheduledTest, Subject, SubjectFormValues } from "./type-subject";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { toast } from "react-toastify";
+import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 interface UseSubjectsProps {
-  editingSubject: Subject | null;
-  schedulingSubject: Subject | null;
+  editingSubject: TaxamonySubject | null;
+  // schedulingSubject: TaxamonySubject | null;
 }
 
 export function useSubjects({
   editingSubject,
-  schedulingSubject,
+  // schedulingSubject,
 }: UseSubjectsProps) {
-  const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
-  const [category, setCatyegory] = useState<string[] | null>(null);
-
   const { data: taxamonyTreeSubject } = useQuery({
     queryKey: [""],
     queryFn: () => api.get(links.subjects.taxonomyTree),
     select: (data) => data.data,
   });
-  useEffect(() => {
-    console.log("taxamony tree: ", taxamonyTreeSubject);
-    setCatyegory(['salom'])
-  }, [taxamonyTreeSubject]);
 
   const { mutate: deleteSubjects, isPending: deletePending } = useMutation({
     mutationKey: ["subjectDelete"],
@@ -41,7 +33,7 @@ export function useSubjects({
 
   const { mutate: updateSubject, isPending: updatePending } = useMutation({
     mutationKey: ["subjectUpdate"],
-    mutationFn: (data: Subject) =>
+    mutationFn: (data: TaxamonySubject) =>
       api.patch(links.subjects.subjectUpdate(data)),
     onSuccess: () => {
       toast.success("Yangilandi");
@@ -53,8 +45,7 @@ export function useSubjects({
 
   const { mutate: createSubject, isPending: createPending } = useMutation({
     mutationKey: ["subjectCreate"],
-    mutationFn: (data: SubjectFormValues) =>
-      api.post(links.subjects.subjectCreate, data),
+    mutationFn: (data: any) => api.post(links.subjects.subjectCreate, data),
     onSuccess: () => {
       toast.success("Yaratildi");
     },
@@ -64,59 +55,37 @@ export function useSubjects({
   });
 
   const handleCreate = (values: SubjectFormValues) => {
-    const newSubject: Subject = {
-      id: `subj_${Date.now()}`,
-      name: values.name.trim(),
+    const newSubject = {
+      title: values.name.trim(),
       category: values.category,
-      isActive: values.isActive,
-      testsCount: 0,
-      createdAt: new Date().toISOString(),
-      scheduledTest: null,
     };
-    setSubjects((prev) => [newSubject, ...prev]);
     createSubject(newSubject);
   };
 
-  const handleUpdate = (values: SubjectFormValues) => {
+  const handleUpdate = () => {
     if (!editingSubject) return;
-    setSubjects((prev) =>
-      prev.map((s) => (s.id === editingSubject.id ? { ...s, ...values } : s)),
-    );
     updateSubject(editingSubject);
   };
 
-  const handleDelete = (subject: Subject) => {
-    setSubjects((prev) => prev.filter((s) => s.id !== subject.id));
+  const handleDelete = (subject: TaxamonySubject) => {
     deleteSubjects(Number(subject.id));
   };
 
-  const handleToggleActive = (subject: Subject) => {
-    setSubjects((prev) =>
-      prev.map((s) =>
-        s.id === subject.id ? { ...s, isActive: !s.isActive } : s,
-      ),
-    );
-  };
+  const handleToggleActive = (subject: Subject) => {};
 
-  const handleSchedule = (scheduled: ScheduledTest) => {
-    if (!schedulingSubject) return;
-    setSubjects((prev) =>
-      prev.map((s) =>
-        s.id === schedulingSubject.id ? { ...s, scheduledTest: scheduled } : s,
-      ),
-    );
-  };
+  // const handleSchedule = (scheduled: ScheduledTest) => {
+  //   if (!schedulingSubject) return;
+  // };
 
   return {
-    subjects,
     handleCreate,
     handleUpdate,
     handleDelete,
     handleToggleActive,
-    handleSchedule,
+    // handleSchedule,
     deletePending,
     updatePending,
     createPending,
-    category,
+    taxamonyTreeSubject,
   };
 }

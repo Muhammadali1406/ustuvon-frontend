@@ -28,5 +28,4 @@ export interface Subject {
 export interface SubjectFormValues {
   name: string;
   category: SubjectCategory;
-  isActive: boolean;
 }
