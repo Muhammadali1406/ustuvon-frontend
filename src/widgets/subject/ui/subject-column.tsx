@@ -1,17 +1,17 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { CalendarClock, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 // import { CategoryBadge } from "./category-badge";
 import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 interface ColumnActions {
-  onSchedule: (subject: TaxamonySubject) => void;
+  // onSchedule: (subject: TaxamonySubject) => void;
   // onEdit: (subject: TaxamonySubject) => void;
   onDelete: (subject: TaxamonySubject) => void;
   // onToggleActive: (subject: TaxamonySubject) => void;
 }
 
 export function buildSubjectsColumns({
-  onSchedule,
+  // onSchedule,
   // onEdit,
   onDelete,
   // onToggleActive,
@@ -79,13 +79,13 @@ export function buildSubjectsColumns({
         const subject = info.row.original;
         return (
           <div className="flex items-center justify-end gap-1">
-            <button
+            {/* <button
               onClick={() => onSchedule(subject)}
               className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               aria-label="Test rejalashtirish"
             >
               <CalendarClock size={16} />
-            </button>
+            </button> */}
             {/* <button
               onClick={() => onEdit(subject)}
               className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"

@@ -162,7 +162,7 @@ export default function SubjectsPage() {
               {/* Desktop jadval */}
               <DataTable
                 columns={buildSubjectsColumns({
-                  onSchedule: openScheduleModal,
+                  // onSchedule: openScheduleModal,
                   // onEdit: openEditModal,
                   onDelete: setDeleteTarget,
                   // onToggleActive: handleToggleActive,
