@@ -3,14 +3,14 @@ import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import {
-  BarChart3,
+  // BarChart3,
   BookOpenCheck,
-  HelpCircle,
+  // HelpCircle,
   LayoutDashboard,
   ListChecks,
   LogOut,
   Menu,
-  Settings,
+  // Settings,
   Users,
   X,
 } from "lucide-react";
