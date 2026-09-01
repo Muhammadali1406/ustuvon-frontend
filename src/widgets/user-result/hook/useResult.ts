@@ -1,46 +1,52 @@
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { percentBadge } from "../ui/badge-chip";
+import { useMemo } from "react";
+import { percentBadge, statusBadge } from "../ui/badge-chip";
 import type { ColumnDef } from "@tanstack/react-table";
-import { type ResultRecord } from "@/widgets/user-result/hook/user-result-data";
+import type { ExamResultApi } from "./user-result-data";
+
+function formatDate(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+}
 
 export function useResult() {
-  const { data: result } = useQuery({
-    queryKey: [""],
-    queryFn: () => api.get(links.exams.results),
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["exam-results"],
+    queryFn: () => api.get<ExamResultApi[]>(links.exams.results),
   });
-  useEffect(() => {
-    console.log("user result: ", result);
-  }, [result]);
 
-  const columns = useMemo<ColumnDef<ResultRecord, any>[]>(
+  const results = data?.data ?? [];
+
+  const columns = useMemo<ColumnDef<ExamResultApi, any>[]>(
     () => [
-      { accessorKey: "date", header: "Sana" },
-      { accessorKey: "subjectName", header: "Fan" },
-      { accessorKey: "testTitle", header: "Test" },
       {
-        id: "correct",
-        header: "To'g'ri javoblar",
-        accessorFn: (row) => row.correctCount,
-        cell: ({ row }) =>
-          `${row.original.correctCount} / ${row.original.totalQuestions}`,
+        id: "date",
+        header: "Sana",
+        accessorFn: (row) => row.completed_at,
+        cell: ({ getValue }) => formatDate(getValue<string>()),
       },
-      { accessorKey: "score", header: "Ball" },
+      { accessorKey: "exam_title", header: "Test" },
       {
-        accessorKey: "percent",
-        header: "Foiz",
+        accessorKey: "level",
+        header: "Daraja",
+        cell: ({ getValue }) => getValue<string>().toUpperCase(),
+      },
+      {
+        accessorKey: "score",
+        header: "Ball",
         cell: ({ getValue }) => percentBadge(getValue<number>()),
       },
       {
-        accessorKey: "durationMinutes",
-        header: "Vaqt",
-        cell: ({ getValue }) => `${getValue<number>()} daqiqa`,
+        accessorKey: "is_passed",
+        header: "Holat",
+        cell: ({ getValue }) => statusBadge(getValue<boolean>()),
       },
     ],
     [],
   );
 
-  return { result, columns };
+  return { results, columns, isLoading, isError };
 }

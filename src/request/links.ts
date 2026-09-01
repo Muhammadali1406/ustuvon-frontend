@@ -44,16 +44,20 @@ export const links = {
       `${API_BASE}/subjects/subject_delete/${id}/`,
   },
 
-  exams: {
-    examinations: `${API_BASE}/exams/examinations/`,
-    examinationDetail: (id: number | string) =>
-      `${API_BASE}/exams/examinations/${id}/`,
-    questions: `${API_BASE}/exams/questions/`,
-    questionDetail: (id: number | string) =>
-      `${API_BASE}/exams/questions/${id}/`,
-    results: `${API_BASE}/exams/results/`,
-    resultDetail: (id: number | string) => `${API_BASE}/exams/results/${id}/`,
-  },
+exams: {
+  examinations: `${API_BASE}/exams/examinations/`,
+  examinationDetail: (id: number | string) =>
+    `${API_BASE}/exams/examinations/${id}/`,
+  examinationStart: (id: number | string) =>
+    `${API_BASE}/exams/examinations/${id}/start/`,
+  examinationSubmit: (id: number | string) =>
+    `${API_BASE}/exams/examinations/${id}/submit/`,
+  questions: `${API_BASE}/exams/questions/`,
+  questionDetail: (id: number | string) =>
+    `${API_BASE}/exams/questions/${id}/`,
+  results: `${API_BASE}/exams/results/`,
+  resultDetail: (id: number | string) => `${API_BASE}/exams/results/${id}/`,
+},
 
   certificates: {
     list: `${API_BASE}/certificates/`,

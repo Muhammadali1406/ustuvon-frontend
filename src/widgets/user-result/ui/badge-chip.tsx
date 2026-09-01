@@ -35,3 +35,16 @@ export function percentBadge(percent: number) {
     </span>
   );
 }
+
+// widgets/user-result/ui/badge-chip.tsx ichiga qo'shing
+export function statusBadge(isPassed: boolean) {
+  return (
+    <span
+      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+        isPassed ? "bg-[#E7F8E8] text-[#0B8E0F]" : "bg-red-50 text-red-500"
+      }`}
+    >
+      {isPassed ? "O'tdi" : "O'tmadi"}
+    </span>
+  );
+}
