@@ -1,43 +1,49 @@
+import { useMemo, useState } from "react";
+import { CheckCircle2, ShieldCheck, Search, UserPlus, UsersIcon } from "lucide-react";
 import { DataTable } from "@/components/ui/table/datatable";
 import { STATUS_FILTERS } from "@/widgets/users/hook/mock-data-users";
 import type { StatusFilterKey } from "@/widgets/users/hook/types-users";
 import { columns } from "@/widgets/users/hook/user-table-column";
 import { useUser } from "@/widgets/users/hook/useUser";
+import { getFullName, isWithinLastDays, safeIncludes } from "@/widgets/users/hook/utils";
 import { StatCard } from "@/widgets/users/ui/stat-card-users";
-import { CheckCircle2, Search, UserPlus, UsersIcon } from "lucide-react";
-import { useMemo, useState } from "react";
 
 export default function Users() {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilterKey>("barchasi");
-  const { allUsers , userUpdate } = useUser();
+  const { allUsers, handleToggleActive } = useUser();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return allUsers.filter((user) => {
+      const fullName = getFullName(user);
       const matchesQuery =
         !q ||
-        user.fullName.toLowerCase().includes(q) ||
-        user.phone.replace(/\s/g, "").includes(q.replace(/\s/g, "")) ||
-        user.email.toLowerCase().includes(q) ||
-        user.userCode.toLowerCase().includes(q);
+        fullName.toLowerCase().includes(q) ||
+        safeIncludes(user.phone, q.replace(/\s/g, "")) ||
+        safeIncludes(user.email, q) ||
+        user.id.toLowerCase().includes(q);
 
       const matchesStatus =
-        statusFilter === "barchasi" || user.status === statusFilter;
+        statusFilter === "barchasi" ||
+        (statusFilter === "faol" && user.is_active) ||
+        (statusFilter === "bloklangan" && !user.is_active);
 
       return matchesQuery && matchesStatus;
     });
   }, [allUsers, query, statusFilter]);
 
   const totalUsers = allUsers.length;
-  const activeUsers = allUsers.filter((u) => u.status === "faol").length;
-  const newThisWeek = allUsers.filter((u) => {
-    const day = Number(u.joinedAt.slice(0, 2));
-    return day >= 19; // demo: oxirgi hafta
-  }).length;
-  const avgTests = Math.round(
-    allUsers.reduce((sum, u) => sum + u.testsTaken, 0) / allUsers.length,
-  );
+  const activeUsers = allUsers.filter((u) => u.is_active).length;
+
+  // Haqiqiy created_at asosida — oldingi kod noto'g'ri edi (formatlangan
+  // sananing birinchi 2 belgisini olib, kunni taqqoslardi, oy chegarasini
+  // hisobga olmasdi va haqiqiy maydonga asoslanmagan edi)
+  const newThisWeek = allUsers.filter((u) => isWithinLastDays(u.created_at, 7)).length;
+
+  const verifiedUsers = allUsers.filter(
+    (u) => u.is_phone_verified || u.is_email_verified,
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -52,7 +58,9 @@ export default function Users() {
         </div>
       </div>
 
-      {/* Stat cards */}
+      {/* Stat cards — faqat backend haqiqatan bera oladigan maydonlardan
+          hisoblangan (testsTaken/avgScore kabi apps.results'ga bog'liq
+          statistikalar hali mavjud emas) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Jami foydalanuvchilar"
@@ -65,14 +73,14 @@ export default function Users() {
           icon={<CheckCircle2 size={18} />}
         />
         <StatCard
-          label="Yangilar (bu hafta)"
+          label="Yangilar (7 kun)"
           value={newThisWeek.toLocaleString("ru-RU")}
           icon={<UserPlus size={18} />}
         />
         <StatCard
-          label="O'rtacha ishlangan test"
-          value={`${avgTests} ta`}
-          icon={<UsersIcon size={18} />}
+          label="Tasdiqlangan foydalanuvchilar"
+          value={verifiedUsers.toLocaleString("ru-RU")}
+          icon={<ShieldCheck size={18} />}
         />
       </div>
 
@@ -111,7 +119,7 @@ export default function Users() {
       </div>
 
       <DataTable
-        columns={columns({ onDelete: () => {}, onEdit: userUpdate })}
+        columns={columns({ onToggleActive: handleToggleActive })}
         data={filtered}
         pageSize={8}
         emptyState={

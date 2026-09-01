@@ -1,35 +1,42 @@
-import { useEffect, useState } from "react";
-import { buildUsers } from "./utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { toast } from "react-toastify";
+import type { ApiUser, PaginatedUsers } from "./types-users";
 
 export const useUser = () => {
-  const [allUsers, setAllUsers] = useState(buildUsers);
+  const queryClient = useQueryClient();
 
-  const { mutate: userUpdate } = useMutation({
-    mutationKey: [""],
-    mutationFn: (id: string) => api.patch(links.adminPanel.userDetail(id)),
+  const { data: users, isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const { data } = await api.get<PaginatedUsers>(links.adminPanel.users);
+      return data.results; // paginatsiya qatlamidan haqiqiy ro'yxatni chiqaramiz
+    },
+  });
+
+  const { mutate: toggleActive, isPending: isToggling } = useMutation({
+    mutationKey: ["users", "toggle-active"],
+    mutationFn: ({ id, is_active }: { id: string; is_active: boolean }) =>
+      api.patch(links.adminPanel.userDetail(id), { is_active }),
     onSuccess: () => {
       toast.success("Bajarildi!");
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
-      console.log("user update error: ", error);
-      toast.error("Xatolik");
+      console.error("user update error:", error);
+      toast.error("Xatolik yuz berdi");
     },
   });
 
-  const { data } = useQuery({
-    queryKey: [""],
-    queryFn: () => api.get<any>(links.adminPanel.users),
-    select: (data) => data.data,
-  });
+  const handleToggleActive = (user: ApiUser) => {
+    toggleActive({ id: user.id, is_active: !user.is_active });
+  };
 
-  useEffect(() => {
-    if (data) setAllUsers(data);
-    console.log("user: ", data);
-    setAllUsers(buildUsers);
-  }, [data]);
-  return { allUsers, userUpdate };
+  return {
+    allUsers: users ?? [],
+    isLoading,
+    handleToggleActive,
+    isToggling,
+  };
 };
