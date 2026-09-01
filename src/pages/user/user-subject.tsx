@@ -1,30 +1,41 @@
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
-import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
+import { ChevronDown, Search } from "lucide-react";
 import { SubjectCard } from "@/widgets/user-subject/ui/subject-card";
 import { useSubject } from "@/widgets/user-subject/hook/useSubject";
+import type { FlatSubject } from "@/widgets/user-subject/hook/subject-types";
+
+const ALL_CATEGORIES = "Barchasi";
 
 export default function UserSubjects() {
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Barchasi");
+  const [activeCategory, setActiveCategory] = useState(ALL_CATEGORIES);
 
-  const categories = useMemo(
-    () => ["Barchasi", ...new Set(SUBJECT_CATALOG.map((s) => s.category))],
-    [],
-  );
+  const { categories, isLoading } = useSubject();
+
+  // Backend 2 qatlamli daraxt qaytaradi (Category -> Subject[]). Bu sahifa
+  // fanlarni yagona ro'yxat sifatida ko'rsatishi kerak, shuning uchun
+  // har bir fanga o'z kategoriyasining nomini biriktirib, tekis ro'yxatga
+  // aylantiramiz.
+  const flatSubjects = useMemo((): FlatSubject[] => {
+    return categories.flatMap((category) =>
+      category.subjects.map((subject) => ({
+        ...subject,
+        categoryId: category.id,
+        categoryTitle: category.title,
+      })),
+    );
+  }, [categories]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return SUBJECT_CATALOG.filter((subject) => {
-      const matchesQuery = !q || subject.name.toLowerCase().includes(q);
+    return flatSubjects.filter((subject) => {
+      const matchesQuery = !q || subject.title.toLowerCase().includes(q);
       const matchesCategory =
-        activeCategory === "Barchasi" || subject.category === activeCategory;
+        activeCategory === ALL_CATEGORIES ||
+        subject.categoryTitle === activeCategory;
       return matchesQuery && matchesCategory;
     });
-  }, [query, activeCategory]);
-
-  const { subjects } = useSubject();
-  console.log("nothing: ", subjects);
+  }, [flatSubjects, query, activeCategory]);
 
   return (
     <div className="space-y-6">
@@ -51,26 +62,32 @@ export default function UserSubjects() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-black/10 bg-white p-1">
-          {categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setActiveCategory(category)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm ${
-                activeCategory === category
-                  ? "bg-[#0EBE15] text-[#101826]"
-                  : "text-slate-500 hover:bg-slate-100"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+        <div className="relative w-full sm:w-56">
+          <select
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
+            className="w-full appearance-none rounded-lg border border-black/10 bg-white py-2 pl-3 pr-9 text-sm text-slate-700 focus:border-[#0EBE15] focus:outline-none focus:ring-1 focus:ring-[#0EBE15]"
+          >
+            <option value={ALL_CATEGORIES}>Barcha kategoriyalar</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.title}>
+                {category.title}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={14}
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+          />
         </div>
       </div>
 
       {/* Grid */}
-      {filtered.length > 0 ? (
+      {isLoading ? (
+        <div className="rounded-xl border border-black/8 bg-white py-16 text-center">
+          <p className="text-sm text-slate-400">Yuklanmoqda…</p>
+        </div>
+      ) : filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((subject) => (
             <SubjectCard key={subject.id} subject={subject} />

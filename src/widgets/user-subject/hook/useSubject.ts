@@ -1,13 +1,16 @@
+import { useQuery } from "@tanstack/react-query";
 import { api } from "@/request/api";
 import { links } from "@/request/links";
-import { useQuery } from "@tanstack/react-query";
+import type { Category } from "./subject-types";
 
 export function useSubject() {
-  const { data: subjects } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ["taxanomy-tree"],
-    queryFn: () => api.get(links.subjects.taxonomyTree),
-    select: (data) => data.data,
+    queryFn: async () => {
+      const { data } = await api.get<Category[]>(links.subjects.taxonomyTree);
+      return data;
+    },
   });
-  console.log("subjects: ", subjects);
-  return { subjects };
+
+  return { categories: categories ?? [], isLoading };
 }

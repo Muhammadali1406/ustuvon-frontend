@@ -1,15 +1,32 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Clock, FileQuestion, Users2 } from "lucide-react";
-import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
-import { TEST_VARIANTS } from "@/widgets/user-subject/hook/test-data";
+import { ArrowLeft, Clock, FileQuestion } from "lucide-react";
+import { useSubjectDetail } from "@/widgets/user-subject-detail/useSubjectDetail";
+import { useSubject } from "@/widgets/user-subject/hook/useSubject";
+import { formatRawLabel } from "@/widgets/test/hook/test-types";
 
 export default function SubjectDetail() {
   const { subjectId } = useParams<{ subjectId: string }>();
+  const { examinations, isLoading: examsLoading } = useSubjectDetail();
+  const { categories, isLoading: categoriesLoading } = useSubject();
 
-  const subject = SUBJECT_CATALOG.find((s) => s.id === subjectId);
-  const variants = subjectId ? TEST_VARIANTS[subjectId] ?? [] : [];
+  // Fan sarlavhasi (nomi, kategoriyasi, tavsifi) uchun HAQIQIY ma'lumotni
+  // taxonomy daraxtidan topamiz — bu ma'lumot examinations javobida yo'q.
+  const subject = categories
+    .flatMap((category) =>
+      category.subjects.map((s) => ({ ...s, categoryTitle: category.title })),
+    )
+    .find((s) => String(s.id) === subjectId);
 
-  if (!subject) {
+  // MUHIM: GET /exams/examinations/ javobida hech qanday fan bilan
+  // bog'lanish maydoni (masalan subject_id) yo'q. Shuning uchun hozircha
+  // qaysi fan bosilishidan qat'iy nazar BARCHA faol testlar ko'rsatiladi.
+  // Backend testlarni fanga bog'lasa, shu joyga filtr qo'shiladi, masalan:
+  //   examinations.filter((t) => t.subject_id === Number(subjectId))
+  const activeTests = examinations.filter((test) => test.is_active);
+
+  const isLoading = examsLoading || categoriesLoading;
+
+  if (!isLoading && !subject) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-[#0B8E0F]">
@@ -29,8 +46,6 @@ export default function SubjectDetail() {
     );
   }
 
-  const Icon = subject.icon;
-
   return (
     <div className="space-y-6">
       <Link
@@ -42,56 +57,58 @@ export default function SubjectDetail() {
       </Link>
 
       {/* Subject header */}
-      <div className="flex items-start gap-4 rounded-xl border border-black/8 bg-white p-5">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[#E7F8E8] text-[#0B8E0F]">
-          <Icon size={22} />
-        </span>
-        <div>
+      {subject && (
+        <div className="rounded-xl border border-black/8 bg-white p-5">
           <span className="rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
-            {subject.category}
+            {subject.categoryTitle}
           </span>
-          <h1 className="mt-1.5 text-lg font-semibold text-slate-900">
-            {subject.name}
+          <h1 className="mt-1.5 text-lg font-semibold capitalize text-slate-900">
+            {subject.title}
           </h1>
-          <p className="mt-1 text-sm text-slate-500">{subject.description}</p>
+          {subject.description && (
+            <p className="mt-1 text-sm text-slate-500">{subject.description}</p>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Test variants */}
+      {/* Tests */}
       <div>
         <h2 className="text-base font-semibold text-slate-900">
           Mavjud testlar
         </h2>
 
-        {variants.length > 0 ? (
+        {isLoading ? (
+          <div className="mt-4 rounded-xl border border-black/8 bg-white py-16 text-center">
+            <p className="text-sm text-slate-400">Yuklanmoqda…</p>
+          </div>
+        ) : activeTests.length > 0 ? (
           <div className="mt-4 divide-y divide-black/5 rounded-xl border border-black/8 bg-white">
-            {variants.map((variant) => (
+            {activeTests.map((test) => (
               <div
-                key={variant.id}
+                key={test.id}
                 className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
               >
                 <div>
                   <p className="text-sm font-semibold text-slate-800">
-                    {subject.name} — {variant.title}
+                    {test.title}
                   </p>
                   <div className="mt-1.5 flex flex-wrap items-center gap-4 text-xs text-slate-500">
                     <span className="flex items-center gap-1">
                       <FileQuestion size={13} />
-                      {variant.questionCount} ta savol
+                      {test.questions_count} ta savol
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock size={13} />
-                      {variant.durationMinutes} daqiqa
+                      {test.duration_time} daqiqa
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Users2 size={13} />
-                      {variant.attemptsCount} marta ishlangan
+                    <span className="rounded-md bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                      {formatRawLabel(test.test_type)} · {test.level.toUpperCase()}
                     </span>
                   </div>
                 </div>
 
                 <Link
-                  to={`/app/subjects/${subject.id}/tests/${variant.id}`}
+                  to={`/app/subjects/${subjectId}/tests/${test.id}`}
                   className="rounded-lg bg-[#0EBE15] px-4 py-2 text-sm font-semibold text-[#101826] transition-colors hover:bg-[#09720C] hover:text-white"
                 >
                   Boshlash
@@ -102,7 +119,7 @@ export default function SubjectDetail() {
         ) : (
           <div className="mt-4 rounded-xl border border-black/8 bg-white py-16 text-center">
             <p className="text-sm text-slate-400">
-              Bu fan uchun hozircha test mavjud emas
+              Hozircha faol test mavjud emas
             </p>
           </div>
         )}
