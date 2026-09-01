@@ -1,23 +1,22 @@
 // src/pages/admin/subjects/SubjectFormModal.tsx
 import { useEffect, useState } from "react";
-import {
-  SUBJECT_CATEGORIES,
-  type Subject,
-  type SubjectFormValues,
-} from "../lib/type-subject";
+import { type SubjectFormValues } from "../lib/type-subject";
 import { Modal } from "./modal";
-import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
+import type { Taxamony, TaxamonySubject } from "@/widgets/test/hook/test-types";
+import { links } from "@/request/links";
+import { api } from "@/request/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface SubjectFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (values: SubjectFormValues) => void;
-  initialValues?: TaxamonySubject | null; // berilsa - tahrirlash rejimi
+  initialValues?: TaxamonySubject | null; // berilsa
 }
 
 const emptyValues: SubjectFormValues = {
   name: "",
-  category: SUBJECT_CATEGORIES[0],
+  category: "",
 };
 
 export function SubjectFormModal({
@@ -31,6 +30,12 @@ export function SubjectFormModal({
 
   const isEditing = Boolean(initialValues);
 
+  const { data: taxamonyTree } = useQuery({
+    queryKey: [""],
+    queryFn: () => api.get(links.subjects.taxonomyTree),
+    select: (data) => data.data,
+  });
+
   useEffect(() => {
     if (isOpen) {
       setValues(
@@ -39,7 +44,10 @@ export function SubjectFormModal({
               name: initialValues.title,
               category: "DTM",
             }
-          : emptyValues,
+          : {
+              name: "",
+              category: taxamonyTree?.[0]?.id ?? "",
+            },
       );
       setError(null);
     }
@@ -103,9 +111,9 @@ export function SubjectFormModal({
             }
             className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#12525A] focus:outline-none focus:ring-1 focus:ring-[#12525A]"
           >
-            {SUBJECT_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            {taxamonyTree?.map((cat: Taxamony) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.title}
               </option>
             ))}
           </select>

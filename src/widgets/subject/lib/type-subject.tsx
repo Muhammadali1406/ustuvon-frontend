@@ -5,7 +5,7 @@ export const SUBJECT_CATEGORIES = [
   "Chet tillari",
   "Sertifikatlar",
   "DTM",
-  "Qo'shish+"
+  "Qo'shish+",
 ] as const;
 
 export type SubjectCategory = (typeof SUBJECT_CATEGORIES)[number];
@@ -27,5 +27,5 @@ export interface Subject {
 
 export interface SubjectFormValues {
   name: string;
-  category: SubjectCategory;
+  category: string | number;
 }

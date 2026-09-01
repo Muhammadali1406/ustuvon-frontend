@@ -14,7 +14,7 @@ export function useSubjects({
   editingSubject,
   schedulingSubject,
 }: UseSubjectsProps) {
-  const { data: taxamonyTreeSubject } = useQuery({
+  const { data: taxamonyTreeSubject, refetch } = useQuery({
     queryKey: [""],
     queryFn: () => api.get(links.subjects.taxonomyTree),
     select: (data) => data.data,
@@ -48,6 +48,7 @@ export function useSubjects({
     mutationFn: (data: any) => api.post(links.subjects.subjectCreate, data),
     onSuccess: () => {
       toast.success("Yaratildi");
+      refetch();
     },
     onError: (error) => {
       console.log("create subject: ", error);
@@ -90,5 +91,6 @@ export function useSubjects({
     updatePending,
     createPending,
     taxamonyTreeSubject,
+    refetchTaxamonyTree: refetch,
   };
 }

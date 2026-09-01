@@ -29,7 +29,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/admin/subjects", label: "Subjects", icon: BookOpenCheck },
   { to: "/admin/tests", label: "Tests", icon: ListChecks },
   { to: "/admin/users", label: "Users", icon: Users },
-  { to: "/admin/statistics", label: "Statistics", icon: BarChart3 },
+  // { to: "/admin/statistics", label: "Statistics", icon: BarChart3 },
 ];
 
 // Pastki app-bar'ga sig'adigan asosiy 4 tasi — qolgani "Menu" ichida.
@@ -224,12 +224,12 @@ function AdminLayout() {
         </nav>
 
         <div className="mt-auto flex flex-col gap-1 border-t border-white/10 p-2 md:p-3">
-          <NavLink to="/admin/help" className={navLinkClass}>
+          {/* <NavLink to="/admin/help" className={navLinkClass}>
             <SidebarRow icon={<HelpCircle size={18} />} label="Yordam" />
           </NavLink>
           <NavLink to="/admin/settings" className={navLinkClass}>
             <SidebarRow icon={<Settings size={18} />} label="Sozlamalar" />
-          </NavLink>
+          </NavLink> */}
           <button
             type="button"
             onClick={handleLogout}
@@ -331,12 +331,12 @@ function AdminLayout() {
                 </NavLink>
               ))}
 
-              <NavLink to="/admin/help" className={menuSheetLinkClass}>
+              {/* <NavLink to="/admin/help" className={menuSheetLinkClass}>
                 <MenuSheetRow icon={<HelpCircle size={17} />} label="Yordam" />
               </NavLink>
               <NavLink to="/admin/settings" className={menuSheetLinkClass}>
                 <MenuSheetRow icon={<Settings size={17} />} label="Sozlamalar" />
-              </NavLink>
+              </NavLink> */}
 
               <div className="my-1.5 border-t border-white/10" />
 
