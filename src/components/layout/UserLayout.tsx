@@ -2,7 +2,6 @@ import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, History, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../zustand/auth-info";
-import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 
 // ---------------------------------------------------------------------------
 // Demo user — auth tugagach real sessiya/context bilan almashtiriladi
@@ -38,18 +37,6 @@ function Logo() {
         U
       </span>
       <span className="text-lg font-semibold text-slate-900">Ustuvon</span>
-    </Link>
-  );
-}
-
-function Avatar() {
-  return (
-    <Link
-      to="/app/profile"
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
-      title={DEMO_USER.first_name}
-    >
-      {initials(DEMO_USER.first_name)}
     </Link>
   );
 }
