@@ -1,7 +1,6 @@
 import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { mockTests } from "./mock-test-data-test";
 import type { Taxamony, Test } from "./test-types";
 
 export function useTest() {
@@ -49,5 +48,5 @@ export function useTest() {
     testDelete(test.id);
   };
 
-  return { tests: tests || mockTests, handleDelete, refetch, taxamonyTree };
+  return { tests: tests || [], handleDelete, refetch, taxamonyTree };
 }
