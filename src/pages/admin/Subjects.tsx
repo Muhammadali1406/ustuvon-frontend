@@ -3,7 +3,6 @@ import { ChevronDown, Plus, Search } from "lucide-react";
 import { CategoryBadge, EmptyState } from "@/widgets/subject";
 import { SubjectFormModal } from "@/widgets/subject/ui/subject-form-modal";
 import { ConfirmDialog } from "@/widgets/subject/ui/confirm-dialog";
-// import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
 import { DataTable } from "@/components/ui/table/datatable";
 import { buildSubjectsColumns } from "@/widgets/subject/ui/subject-column";
 // import type { Subject } from "@/widgets/subject/lib/type-subject";
@@ -12,6 +11,7 @@ import { formatDate, formatDateTime } from "@/components/lib/formats";
 import { useSubjects } from "@/widgets/subject/lib/useSubject";
 import { CreateCategoryModal } from "@/components/modals/categoryCreate/createCategoryModel";
 import type { Taxamony, TaxamonySubject } from "@/widgets/test/hook/test-types";
+import { ScheduleTestModal } from "@/widgets/subject/ui/schedule-test-modal";
 
 export default function SubjectsPage() {
   const [search, setSearch] = useState("");
@@ -23,9 +23,9 @@ export default function SubjectsPage() {
   );
   const [categoryModel, setCategoryModel] = useState(false);
 
-  // const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-  // const [schedulingSubject, setSchedulingSubject] =
-  //   useState<TaxamonySubject | null>(null);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [schedulingSubject, setSchedulingSubject] =
+    useState<TaxamonySubject | null>(null);
 
   const [deleteTarget, setDeleteTarget] = useState<TaxamonySubject | null>(
     null,
@@ -36,11 +36,12 @@ export default function SubjectsPage() {
     handleDelete,
     handleUpdate,
     handleToggleActive,
+    handleSchedule,
     taxamonyTreeSubject,
     // deletePending,
     // updatePending,
     // createPending,
-  } = useSubjects({ editingSubject });
+  } = useSubjects({ editingSubject, schedulingSubject });
 
   useEffect(() => {
     if (categoryFilter === "Qo'shish+") {
@@ -82,10 +83,10 @@ export default function SubjectsPage() {
   //   setFormModalOpen(true);
   // };
 
-  // const openScheduleModal = (subject: TaxamonySubject) => {
-  //   setSchedulingSubject(subject);
-  //   setScheduleModalOpen(true);
-  // };
+  const openScheduleModal = (subject: TaxamonySubject) => {
+    setSchedulingSubject(subject);
+    setScheduleModalOpen(true);
+  };
 
   return (
     <div className="h-full">
@@ -161,7 +162,7 @@ export default function SubjectsPage() {
               {/* Desktop jadval */}
               <DataTable
                 columns={buildSubjectsColumns({
-                  // onSchedule: openScheduleModal,
+                  onSchedule: openScheduleModal,
                   // onEdit: openEditModal,
                   onDelete: setDeleteTarget,
                   // onToggleActive: handleToggleActive,
@@ -172,14 +173,14 @@ export default function SubjectsPage() {
               {/* Mobil kartalar */}
               <ul className="divide-y divide-slate-100 sm:hidden">
                 {filteredSubjects.map((subject: any) => (
-                  <li key={subject.id} className="px-4 py-4">
+                  <li key={subject?.id} className="px-4 py-4">
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-medium text-slate-900">
-                          {subject.title}
+                          {subject?.title}
                         </p>
                         <div className="mt-1">
-                          <CategoryBadge category={subject.category} />
+                          <CategoryBadge category={subject?.category} />
                         </div>
                       </div>
                       <StatusToggle
@@ -191,29 +192,29 @@ export default function SubjectsPage() {
                     <dl className="mt-3 grid grid-cols-2 gap-y-1 text-xs text-slate-500">
                       <dt>Testlar soni</dt>
                       <dd className="text-right text-slate-700">
-                        {subject.testsCount}
+                        {subject?.testsCount}
                       </dd>
                       <dt>Yaratilgan</dt>
                       <dd className="text-right text-slate-700">
-                        {formatDate(subject.createdAt)}
+                        {formatDate(subject?.createdAt)}
                       </dd>
-                      {subject.scheduledTest && (
+                      {subject?.scheduledTest && (
                         <>
                           <dt>Rejalashtirilgan</dt>
                           <dd className="text-right text-[#8A6A24]">
-                            {formatDateTime(subject.scheduledTest.date)}
+                            {formatDateTime(subject?.scheduledTest?.date)}
                           </dd>
                         </>
                       )}
                     </dl>
 
                     <div className="mt-3 flex gap-2">
-                      {/* <button
+                      <button
                         onClick={() => openScheduleModal(subject)}
                         className="flex-1 rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-700"
                       >
                         Rejalashtirish
-                      </button> */}
+                      </button>
                       {/* <button
                         onClick={() => openEditModal(subject)}
                         className="flex-1 rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-700"
@@ -253,12 +254,12 @@ export default function SubjectsPage() {
         initialValues={editingSubject}
       />
 
-      {/* <ScheduleTestModal
+      <ScheduleTestModal
         isOpen={scheduleModalOpen}
         onClose={() => setScheduleModalOpen(false)}
         onSubmit={handleSchedule}
         subject={schedulingSubject}
-      /> */}
+      />
 
       <ConfirmDialog
         isOpen={Boolean(deleteTarget)}

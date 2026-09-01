@@ -74,7 +74,9 @@ export type Taxamony = {
 };
 
 
-export function formatRawLabel(value: string): string {
+export function formatRawLabel(value: string | null | undefined): string {
+  if (!value) return "—";
+ 
   return value
     .split(/[_\s]+/)
     .filter(Boolean)

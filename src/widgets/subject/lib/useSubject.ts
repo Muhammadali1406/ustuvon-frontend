@@ -7,12 +7,12 @@ import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 interface UseSubjectsProps {
   editingSubject: TaxamonySubject | null;
-  // schedulingSubject: TaxamonySubject | null;
+  schedulingSubject: TaxamonySubject | null;
 }
 
 export function useSubjects({
   editingSubject,
-  // schedulingSubject,
+  schedulingSubject,
 }: UseSubjectsProps) {
   const { data: taxamonyTreeSubject } = useQuery({
     queryKey: [""],
@@ -71,18 +71,21 @@ export function useSubjects({
     deleteSubjects(Number(subject.id));
   };
 
-  const handleToggleActive = (subject: Subject) => {};
+  const handleToggleActive = (subject: Subject) => {
+    console.log("toggle active: ", subject);
+  };
 
-  // const handleSchedule = (scheduled: ScheduledTest) => {
-  //   if (!schedulingSubject) return;
-  // };
+  const handleSchedule = (scheduled: ScheduledTest) => {
+    if (!schedulingSubject) return;
+    console.log("schedule test: ", schedulingSubject, scheduled);
+  };
 
   return {
     handleCreate,
     handleUpdate,
     handleDelete,
     handleToggleActive,
-    // handleSchedule,
+    handleSchedule,
     deletePending,
     updatePending,
     createPending,

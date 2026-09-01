@@ -1,4 +1,3 @@
-import type { Subject } from "@/widgets/subject/lib/type-subject";
 import type { TaxamonySubject } from "@/widgets/test/hook/test-types";
 
 const API_ORIGIN = import.meta.env.VITE_API_BASE_URL ?? "";
