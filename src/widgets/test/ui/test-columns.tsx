@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { formatRawLabel, type Test } from "../hook/test-types";
 
 interface ColumnActions {
-  onEdit?: (test: Test) => void;
+  onEdit: (test: Test) => void;
   onDelete: (test: Test) => void;
 }
 

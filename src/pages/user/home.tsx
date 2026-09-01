@@ -28,7 +28,7 @@ export default function Home() {
         month: "long",
         year: "numeric",
       }),
-    [],
+    [], 
   );
  
   const visibleSubjects = showAllSubjects

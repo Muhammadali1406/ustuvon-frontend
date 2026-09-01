@@ -8,6 +8,7 @@ import { SummaryCard } from "@/widgets/test/ui/summary-card";
 import { SelectFilter } from "@/widgets/test/ui/select-filter";
 import { CreateTestModal } from "@/components/modals/testCreate/ui/create-test-modal";
 import { useTest } from "@/widgets/test/hook/useTest";
+import { EditTestModal } from "@/components/modals/editTest/editTEstModal";
 
 const ALL_FORMATS = "Barchasi";
 
@@ -17,6 +18,7 @@ export default function TestsPage() {
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Test | null>(null);
+  const [editTarget, setEditTarget] = useState<Test | null>(null);
 
   const { tests, handleDelete, refetch } = useTest();
 
@@ -122,6 +124,7 @@ export default function TestsPage() {
           <DataTable
             columns={buildTestsColumns({
               onDelete: (test) => setDeleteTarget(test),
+              onEdit: (test) => setEditTarget(test),
             })}
             data={filteredTests}
             emptyState={
@@ -137,6 +140,13 @@ export default function TestsPage() {
           />
         </div>
       </div>
+
+      <EditTestModal
+        testId={editTarget?.id ?? null}
+        isOpen={Boolean(editTarget)}
+        onClose={() => setEditTarget(null)}
+        refetch={refetch}
+      />
 
       <CreateTestModal
         isOpen={createModalOpen}
