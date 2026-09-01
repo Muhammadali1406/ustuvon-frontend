@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./components/layout/AdminLayout";
 import UserLayout from "./components/layout/UserLayout";
 import Subjects from "./pages/admin/Subjects";
@@ -12,7 +12,7 @@ import RegisterPage from "./widgets/register/ui/register-page";
 import PasswordResetPage from "./widgets/reset-pasword/ui/paswordResetPage";
 import { GuestRoute } from "./components/layout/Guestroute";
 import { ProtectedRoute } from "./components/layout/Protectedroute";
-import Home from "./pages/user/home";
+// import Home from "./pages/user/home";
 import UserSubjects from "./pages/user/user-subject";
 import SubjectDetail from "./pages/user/user-subject-detail";
 import TestRules from "./pages/user/test-rule";
@@ -79,8 +79,9 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Home />} />
-        <Route path="subjects" element={<UserSubjects />} />
+        {/* <Route index element={<Home />} /> */}
+        <Route index element={<Navigate to="subjects" replace />} />
+        <Route index path="subjects" element={<UserSubjects />} />
         <Route path="subjects/:subjectId" element={<SubjectDetail />} />
         <Route
           path="subjects/:subjectId/tests/:testId"

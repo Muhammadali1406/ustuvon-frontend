@@ -1,6 +1,6 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, History, Home, LogOut, User as UserIcon } from "lucide-react";
+import { BookOpen, History, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "../zustand/auth-info";
 import { DEMO_USER } from "@/widgets/user-home/hook/demo-data";
 
@@ -25,7 +25,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: "/app", label: "Bosh sahifa", icon: Home, end: true },
+  // { to: "/app", label: "Bosh sahifa", icon: Home, end: true },
   { to: "/app/subjects", label: "Fanlar", icon: BookOpen },
   { to: "/app/results", label: "Natijalarim", icon: History },
   { to: "/app/profile", label: "Profil", icon: UserIcon },
@@ -57,6 +57,7 @@ function Avatar() {
 export default function UserLayout() {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogout = () => {
     logout();
@@ -84,7 +85,12 @@ export default function UserLayout() {
 
           <nav className="flex items-center gap-1">
             {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
-              <NavLink key={to} to={to} end={end} className={desktopNavLinkClass}>
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={desktopNavLinkClass}
+              >
                 <Icon size={16} />
                 {label}
               </NavLink>
@@ -100,7 +106,13 @@ export default function UserLayout() {
             >
               <LogOut size={17} />
             </button>
-            <Avatar />
+            <Link
+              to="/app/profile"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
+              title={user?.first_name}
+            >
+              {initials(user?.first_name || "")}
+            </Link>
           </div>
         </div>
       </header>
@@ -108,7 +120,13 @@ export default function UserLayout() {
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-black/8 bg-white/90 px-4 py-3 backdrop-blur-md md:hidden">
         <Logo />
-        <Avatar />
+        <Link
+          to="/app/profile"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
+          title={user?.first_name}
+        >
+          {initials(user?.first_name || "")}
+        </Link>
       </header>
 
       {/* Content */}
