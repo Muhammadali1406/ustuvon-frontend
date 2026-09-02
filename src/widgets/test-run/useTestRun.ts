@@ -28,6 +28,7 @@ export function useTestRun({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [secondsLeft, setSecondsLeft] = useState(0);
+  const [result, setResult] = useState<ExamSubmitResponse | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const stopTimer = useCallback(() => {
@@ -44,14 +45,8 @@ export function useTestRun({
       }),
     onSuccess: (res) => {
       stopTimer();
+      setResult(res.data);
       setPhase("finished");
-      const resultId =
-        res.data?.id ?? res.data?.result_uuid ?? res.data?.result;
-      if (resultId) {
-        navigate(
-          `/app/subjects/${subjectId}/tests/${testId}/result/${resultId}`
-        );
-      }
     },
   });
 
@@ -104,6 +99,10 @@ export function useTestRun({
     submitMutation.mutate();
   }, [stopTimer, submitMutation]);
 
+  const goToResults = useCallback(() => {
+    navigate(`/app/results`);
+  }, [navigate, subjectId, testId]);
+
   const answeredCount = useMemo(() => Object.keys(answers).length, [answers]);
 
   return {
@@ -117,6 +116,7 @@ export function useTestRun({
     answers,
     answeredCount,
     secondsLeft,
+    result,
     isStarting: startMutation.isPending,
     isSubmitting: submitMutation.isPending,
     handleStart,
@@ -125,5 +125,6 @@ export function useTestRun({
     handleNext,
     handlePrev,
     handleSubmit,
+    goToResults,
   };
 }

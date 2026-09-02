@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Clock, Loader2 } from "lucide-react";
+import { ArrowLeft, Clock, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
 import { useTestRun } from "@/widgets/test-run/useTestRun";
 
@@ -26,6 +26,7 @@ export default function TestRun() {
     answers,
     answeredCount,
     secondsLeft,
+    result,
     isStarting,
     isSubmitting,
     handleStart,
@@ -34,6 +35,7 @@ export default function TestRun() {
     handleNext,
     handlePrev,
     handleSubmit,
+    goToResults,
   } = useTestRun({ testId: testId!, subjectId: subjectId! });
 
   const backLink = subject ? `/app/subjects/${subject.id}` : "/app/subjects";
@@ -82,6 +84,54 @@ export default function TestRun() {
         <Link to={backLink} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:underline">
           <ArrowLeft size={14} />
           Orqaga qaytish
+        </Link>
+      </div>
+    );
+  }
+
+  if (phase === "finished" && result) {
+    return (
+      <div className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center text-center">
+        {result.is_passed ? (
+          <CheckCircle2 className="text-[#0B8E0F]" size={48} />
+        ) : (
+          <XCircle className="text-[#B3423B]" size={48} />
+        )}
+
+        <h1 className="mt-4 text-2xl font-semibold text-slate-900">{result.detail}</h1>
+
+        <span
+          className={`mt-3 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+            result.is_passed ? "bg-[#E7F8E8] text-[#0B8E0F]" : "bg-[#B3423B]/10 text-[#B3423B]"
+          }`}
+        >
+          {result.is_passed ? "O'tdingiz" : "O'ta olmadingiz"}
+        </span>
+
+        <div className="mt-6 grid w-full grid-cols-3 gap-3">
+          <div className="rounded-xl bg-slate-50 p-3">
+            <p className="text-lg font-semibold text-slate-900">{result.score}%</p>
+            <p className="text-xs text-slate-500">Ball</p>
+          </div>
+          <div className="rounded-xl bg-slate-50 p-3">
+            <p className="text-lg font-semibold text-slate-900">{result.correct_answers}</p>
+            <p className="text-xs text-slate-500">To'g'ri javob</p>
+          </div>
+          <div className="rounded-xl bg-slate-50 p-3">
+            <p className="text-lg font-semibold text-slate-900">{result.total_questions}</p>
+            <p className="text-xs text-slate-500">Jami savol</p>
+          </div>
+        </div>
+
+        <button
+          onClick={goToResults}
+          className="mt-8 inline-flex items-center justify-center rounded-xl bg-[#0B8E0F] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#097a0c]"
+        >
+          Natijalar sahifasiga o'tish
+        </button>
+        <Link to={backLink} className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:underline">
+          <ArrowLeft size={14} />
+          Fanga qaytish
         </Link>
       </div>
     );

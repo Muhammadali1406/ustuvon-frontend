@@ -88,10 +88,11 @@ export default function UserLayout() {
             <button
               type="button"
               title="Chiqish"
-              className="rounded-md p-2 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-500"
+              className="rounded-md p-2 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-500 flex items-center gap-1 text-sm font-medium"
               onClick={handleLogout}
             >
               <LogOut size={17} />
+              Chiqish
             </button>
             <Link
               to="/app/profile"

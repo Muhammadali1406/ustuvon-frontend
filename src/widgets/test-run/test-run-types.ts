@@ -30,3 +30,11 @@ export interface ExamSubmitResponse {
   result?: string;
   [key: string]: unknown;
 }
+
+export interface ExamSubmitResponse {
+  detail: string;
+  score: number;
+  correct_answers: number;
+  total_questions: number;
+  is_passed: boolean;
+}
