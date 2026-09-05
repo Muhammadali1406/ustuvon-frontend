@@ -108,13 +108,24 @@ export default function UserLayout() {
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-black/8 bg-white/90 px-4 py-3 backdrop-blur-md md:hidden">
         <Logo />
-        <Link
-          to="/app/profile"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
-          title={user?.first_name}
-        >
-          {initials(user?.first_name || "")}
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            title="Chiqish"
+            className="rounded-md p-2 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-500 flex items-center gap-1 text-sm font-medium"
+            onClick={handleLogout}
+          >
+            <LogOut size={17} />
+            Chiqish
+          </button>
+          <Link
+            to="/app/profile"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E7F8E8] text-xs font-semibold text-[#0B8E0F] transition-colors hover:bg-[#0EBE15]/25"
+            title={user?.first_name}
+          >
+            {initials(user?.first_name || "")}
+          </Link>
+        </div>
       </header>
 
       {/* Content */}
