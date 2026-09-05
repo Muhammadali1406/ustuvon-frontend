@@ -14,10 +14,6 @@ import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { secureStorage } from "@/request/secure-storage";
 
-// ---------------------------------------------------------------------------
-// Backend sxemasiga mos tiplar (ustuvon_api_schema.yaml: Register, TokenResponse)
-// ---------------------------------------------------------------------------
-
 type ContactMethod = "phone" | "email";
 
 interface RegisterPayload {
@@ -148,9 +144,6 @@ function extractServerError(error: unknown): string {
   return "Ro'yxatdan o'tishda xatolik yuz berdi. Qaytadan urinib ko'ring.";
 }
 
-// ---------------------------------------------------------------------------
-// Hook
-// ---------------------------------------------------------------------------
 
 type Step = "form" | "verify";
 
@@ -195,9 +188,6 @@ export function useRegister() {
       return data;
     },
     onSuccess: async (data) => {
-      // Backend register bilan birga tokenlarni ham qaytaradi (avtomatik
-      // login) — shuning uchun tasdiqlash bosqichida ham /auth/verify/
-      // (jwtAuth talab qiladi) so'rovlari muammosiz ishlaydi.
       await secureStorage.setTokens(data.access, data.refresh);
       await secureStorage.setUserType(data.user_type);
       setSession(data.user, data.user_type);
@@ -245,12 +235,6 @@ export function useRegister() {
 
   const resendMutation = useMutation({
     mutationFn: async () => {
-      // Diqqat: OpenAPI hujjatida /auth/verify/resend/ so'rov tanasi sifatida
-      // VerifyCode (code maydoni majburiy) ko'rsatilgan — bu ehtimol
-      // hujjatlashtirish xatosi (qayta yuborishda hali kod yo'q). Backend
-      // aslida bo'sh so'rovni kutayotgan bo'lishi mumkin; agar backend
-      // "code" maydonini majburiy qilib qo'ysa, shu joyni backend
-      // jamoasi bilan aniqlashtirish kerak bo'ladi.
       await api.post(links.auth.verifyResend, {});
     },
     onSuccess: () => {
