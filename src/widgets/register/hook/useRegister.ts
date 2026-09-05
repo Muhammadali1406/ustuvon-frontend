@@ -131,6 +131,14 @@ function validate(state: FormState): FormState["errors"] {
 function extractServerError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as Record<string, unknown> | undefined;
+
+    // Backend shape: { success: false, error: { code, message, details } }
+    const errObj = data?.error as
+      | { code?: string; message?: string; details?: unknown }
+      | undefined;
+    if (errObj?.message) return errObj.message;
+
+    // Eski / boshqa formatdagi javoblar bilan mos ishlashi uchun fallback'lar
     if (typeof data?.detail === "string") return data.detail;
     for (const field of ["phone", "email", "password", "non_field_errors"]) {
       const value = data?.[field];
@@ -162,7 +170,8 @@ export function useRegister() {
     cooldownTimer.current = window.setInterval(() => {
       setCooldown((prev) => {
         if (prev <= 1) {
-          if (cooldownTimer.current) window.clearInterval(cooldownTimer.current);
+          if (cooldownTimer.current)
+            window.clearInterval(cooldownTimer.current);
           return 0;
         }
         return prev - 1;

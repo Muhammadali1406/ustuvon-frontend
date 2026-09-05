@@ -44,8 +44,6 @@ const initialState: FormState = { identifier: "", password: "", errors: {} };
 function formReducer(state: FormState, action: FormAction): FormState {
   switch (action.type) {
     case "SET_FIELD":
-      // Maydon o'zgarganda o'sha maydonning eski xatosini tozalaymiz —
-      // foydalanuvchi yozishni boshlaganda xato darhol yo'qoladi
       return {
         ...state,
         [action.field]: action.value,
@@ -72,6 +70,14 @@ function validate(state: FormState): FormState["errors"] {
 function extractServerError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as Record<string, unknown> | undefined;
+
+    // Backend shape: { success: false, error: { code, message, details } }
+    const errObj = data?.error as
+      | { code?: string; message?: string; details?: unknown }
+      | undefined;
+    if (errObj?.message) return errObj.message;
+
+    // Eski / boshqa formatdagi javoblar bilan mos ishlashi uchun fallback'lar
     if (typeof data?.detail === "string") return data.detail;
     if (Array.isArray(data?.non_field_errors) && data.non_field_errors[0]) {
       return String(data.non_field_errors[0]);
@@ -99,25 +105,19 @@ export function useLogin() {
   const location = useLocation();
   const setSession = useAuthStore((state) => state.setSession);
 
-  const mutation = useMutation({
-    mutationFn: async (payload: LoginPayload) => {
-      const { data } = await api.post<TokenResponse>(links.auth.login, payload);
-      return data;
-    },
-    onSuccess: async (data) => {
-      // 1) Tokenlarni shifrlangan holda saqlaymiz (keyingi so'rovlar va
-      //    sahifa yangilanganda tiklash uchun)
+  const {
+    mutate: login,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: async (payload: LoginPayload) =>
+      await api.post<TokenResponse>(links.auth.login, payload),
+    onSuccess: async (data: any) => {
       await secureStorage.setTokens(data.access, data.refresh);
       await secureStorage.setUserType(data.user_type);
 
-      // 2) Global holatga yozamiz — endi UserLayout, Home, ProtectedRoute
-      //    va h.k. barchasi shu yerdan o'qiydi. /auth/me/ ga QO'SHIMCHA
-      //    so'rov YO'Q — user obyekti javobning o'zida allaqachon keldi.
       setSession(data.user, data.user_type);
-
-      // ProtectedRoute foydalanuvchini bu yerga /login'ga yo'naltirishdan
-      // oldin qaysi sahifaga borishga uringanini state.from'ga yozib
-      // qo'ygan bo'lishi mumkin — bo'lsa o'sha yerga qaytaramiz
       const from = (location.state as { from?: Location })?.from as
         | Location
         | undefined;
@@ -127,10 +127,11 @@ export function useLogin() {
         replace: true,
       });
     },
+    onError: (res) => {
+      console.error("Login error:", res);
+    },
   });
 
-  // useCallback — har render'da yangi funksiya yaratilmasin, input'lar
-  // qayta-qayta re-render bo'lmasin (forma kattalashsa foyda beradi)
   const setField = useCallback((field: FormField, value: string) => {
     dispatch({ type: "SET_FIELD", field, value });
   }, []);
@@ -141,16 +142,16 @@ export function useLogin() {
       dispatch({ type: "SET_ERRORS", errors });
       return;
     }
-    mutation.mutate({ identifier: form.identifier, password: form.password });
-  }, [form, mutation]);
-
+    login({ identifier: form.identifier, password: form.password });
+  }, [form, login]);
+  console.log("error: ", error);
   return {
     identifier: form.identifier,
     password: form.password,
     errors: form.errors,
     setField,
     submit,
-    isSubmitting: mutation.isPending,
-    serverError: mutation.isError ? extractServerError(mutation.error) : null,
+    isSubmitting: isPending,
+    serverError: isError ? extractServerError(error) : null,
   };
 }
