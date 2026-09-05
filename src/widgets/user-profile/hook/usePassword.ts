@@ -1,118 +1,160 @@
-import { links } from "./../../../request/links";
+import { links } from "@/request/links";
 import { api } from "@/request/api";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isValidPassword } from "@/components/lib/pasword-validators";
 import { toast } from "react-toastify";
 
-interface ChangePasswordPayload {
-  old_password: string;
-  new_password: string;
-}
-
-interface ConfirmPaswordPayload {
+interface ConfirmPasswordPayload {
   old_password: string;
   code: string;
   new_password: string;
 }
 
+type PasswordStep = "old-password" | "verify" | "done";
+
+const CODE_TTL_SECONDS = 5 * 60; // 5 daqiqa
+
 export function usePassword() {
   const [passwordError, setPasswordError] = useState("");
-  const [passwordStep, setPasswordStep] = useState<"form" | "verify" | "done">(
-    "form",
-  );
-  const [passwordForm, setPasswordForm] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [passwordStep, setPasswordStep] =
+    useState<PasswordStep>("old-password");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [code, setCode] = useState("");
+  const [secondsLeft, setSecondsLeft] = useState(CODE_TTL_SECONDS);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { mutate: confirmPasword } = useMutation<
-    unknown,
-    Error,
-    ConfirmPaswordPayload
-  >({
-    mutationKey: ["change"],
-    mutationFn: (data) => api.post(links.auth.passwordChangeConfirm, data),
-    onSuccess: () => {
-      setPasswordStep("done");
-    },
-    onError: (error) => {
-      console.log("password change: ", error);
-      toast.error("Xatolik!");
-    },
-  });
+  const clearTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
-  const { mutate: changePassword } = useMutation<
-    unknown,
-    Error,
-    ChangePasswordPayload
-  >({
-    mutationKey: ["change"],
-    mutationFn: (data) => api.post(links.auth.passwordChange, data),
+  const startTimer = () => {
+    clearTimer();
+    setSecondsLeft(CODE_TTL_SECONDS);
+    intervalRef.current = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearTimer();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (passwordStep === "verify") {
+      startTimer();
+    } else {
+      clearTimer();
+    }
+    return clearTimer;
+  }, [passwordStep]);
+
+  const isCodeExpired = passwordStep === "verify" && secondsLeft === 0;
+
+  const formattedTimeLeft = `${Math.floor(secondsLeft / 60)}:${String(
+    secondsLeft % 60,
+  ).padStart(2, "0")}`;
+
+  // 1-qadam: eski parol mahalliy tekshiriladi, lekin so'rov TANASI BO'SH —
+  // backend JWT orqali foydalanuvchini biladi, faqat kod yuborish uchun
+  // signal kifoya.
+  const { mutate: requestCode, isPending: isRequestingCode } = useMutation({
+    mutationKey: ["password-change-request"],
+    mutationFn: () => api.post(links.auth.passwordChange, {}),
     onSuccess: () => {
       setPasswordStep("verify");
     },
     onError: (error) => {
-      console.log("password change: ", error);
-      toast.error("Xatolik!");
+      console.error("password change request:", error);
+      toast.error("Kod yuborishda xatolik yuz berdi");
     },
   });
 
-  const handlePasswordSubmit = () => {
-    if (!passwordForm.oldPassword) {
+  // 2-qadam: eski parol (1-qadamdan) + kod + yangi parol — hammasi birga
+  const { mutate: confirmPassword, isPending: isConfirming } = useMutation<
+    unknown,
+    Error,
+    ConfirmPasswordPayload
+  >({
+    mutationKey: ["password-change-confirm"],
+    mutationFn: (data) => api.post(links.auth.passwordChangeConfirm, data),
+    onSuccess: () => {
+      setPasswordStep("done");
+      // Forma faqat MUVAFFAQIYATLI tasdiqlangandan keyin tozalanadi —
+      // xato bo'lsa, foydalanuvchi xabarni ko'radi va qayta urinadi.
+      window.setTimeout(() => {
+        setPasswordStep("old-password");
+        setOldPassword("");
+        setNewPassword("");
+        setCode("");
+      }, 2500);
+    },
+    onError: (error) => {
+      console.error("password change confirm:", error);
+      toast.error("Kod yoki parolni tekshirib qayta urinib ko'ring");
+    },
+  });
+
+  const handleOldPasswordSubmit = () => {
+    if (!oldPassword) {
       setPasswordError("Eski parolni kiriting");
       return;
     }
-    if (!isValidPassword(passwordForm.newPassword)) {
+    setPasswordError("");
+    requestCode();
+  };
+
+  const handleResendCode = () => {
+    setPasswordError("");
+    requestCode();
+  };
+
+  const handleCodeSubmit = () => {
+    if (isCodeExpired) {
+      setPasswordError("Kod muddati tugagan, qaytadan so'rang");
+      return;
+    }
+    if (code.trim().length !== 6) {
+      setPasswordError("6 xonali kodni to'liq kiriting");
+      return;
+    }
+    if (!isValidPassword(newPassword)) {
       setPasswordError(
         "Yangi parol kamida 9 belgi, 1 harf va 1 maxsus belgidan iborat bo'lishi kerak",
       );
       return;
     }
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setPasswordError("Parollar mos kelmadi");
-      return;
-    }
     setPasswordError("");
-    changePassword({
-      old_password: passwordForm.oldPassword,
-      new_password: passwordForm.newPassword,
+    confirmPassword({
+      old_password: oldPassword,
+      code,
+      new_password: newPassword,
     });
-  };
-
-  const handleCodeSubmit = () => {
-    if (code.trim().length !== 6) {
-      setPasswordError("6 xonali kodni to'liq kiriting");
-      return;
-    }
-    setPasswordError("");
-    confirmPasword({
-      old_password: passwordForm.oldPassword,
-      new_password: passwordForm.newPassword,
-      code: code,
-    });
-    window.setTimeout(() => {
-      setPasswordStep("form");
-      setPasswordForm({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-      setCode("");
-    }, 2500);
   };
 
   return {
-    passwordForm,
     passwordStep,
-    handlePasswordSubmit,
-    passwordError,
-    setPasswordForm,
-    handleCodeSubmit,
+    setPasswordStep,
+    oldPassword,
+    setOldPassword,
+    newPassword,
+    setNewPassword,
     code,
     setCode,
-    setPasswordStep,
+    passwordError,
+    handleOldPasswordSubmit,
+    handleCodeSubmit,
+    handleResendCode,
+    isRequestingCode,
+    isConfirming,
+    secondsLeft,
+    formattedTimeLeft,
+    isCodeExpired,
   };
 }
