@@ -17,7 +17,8 @@ async function readToken(key: string): Promise<string | null> {
   if (!encrypted) return null;
 
   try {
-    return await decryptToken(encrypted);
+    const decrypted = await decryptToken(encrypted);
+    return decrypted;
   } catch {
     // Buzilgan qiymat, eski kalit bilan shifrlangan, yoki manipulyatsiya
     // qilingan — ishonib bo'lmaydi, tozalab tashlaymiz.

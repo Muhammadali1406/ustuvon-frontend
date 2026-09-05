@@ -114,14 +114,14 @@ export function useLogin() {
     mutationFn: async (payload: LoginPayload) =>
       await api.post<TokenResponse>(links.auth.login, payload),
     onSuccess: async (data: any) => {
-      await secureStorage.setTokens(data.access, data.refresh);
-      await secureStorage.setUserType(data.user_type);
+      await secureStorage.setTokens(data.data.access, data.data.refresh);
+      await secureStorage.setUserType(data.data.user_type);
 
-      setSession(data.user, data.user_type);
+      setSession(data.data.user, data.data.user_type);
       const from = (location.state as { from?: Location })?.from as
         | Location
         | undefined;
-      const fallback = data.user_type === "admin" ? "/admin" : "/app";
+      const fallback = data.data.user_type === "admin" ? "/admin" : "/app";
 
       navigate(from ? `${from.pathname}${from.search}` : fallback, {
         replace: true,

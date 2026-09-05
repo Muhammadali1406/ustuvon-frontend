@@ -1,8 +1,4 @@
-
-import axios, {
-  type AxiosError,
-  type InternalAxiosRequestConfig,
-} from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { links } from "./links";
 import { secureStorage } from "./secure-storage";
 import { useAuthStore } from "@/components/zustand/auth-info";
@@ -18,21 +14,14 @@ export function registerSessionExpiredHandler(handler: SessionExpiredHandler) {
   onSessionExpired = handler;
 }
 
-// ---------------------------------------------------------------------------
-// Request interceptor — access tokenni Authorization header'ga qo'shadi
-// ---------------------------------------------------------------------------
-
 api.interceptors.request.use(async (config) => {
   const accessToken = await secureStorage.getAccessToken();
+  console.log("Access token retrieved:", accessToken);
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
-
-// ---------------------------------------------------------------------------
-// Response interceptor — 401 kelsa avtomatik refresh + qayta urinish
-// ---------------------------------------------------------------------------
 
 interface RetriableConfig extends InternalAxiosRequestConfig {
   _retried?: boolean;
@@ -51,7 +40,6 @@ async function refreshAccessToken(): Promise<string | null> {
       { baseURL: import.meta.env.VITE_API_BASE_URL ?? "" },
     );
 
-    // Backend rotatsiya bilan yangi refresh ham qaytarishi mumkin
     if (data.refresh) {
       await secureStorage.setTokens(data.access, data.refresh);
     } else {
@@ -60,8 +48,6 @@ async function refreshAccessToken(): Promise<string | null> {
 
     return data.access;
   } catch {
-    // Refresh token ham yaroqsiz — global holatni ham, storage'ni ham
-    // tozalaymiz, foydalanuvchi qayta login qilishi kerak bo'ladi
     useAuthStore.getState().logout();
     return null;
   }
@@ -81,8 +67,6 @@ api.interceptors.response.use(
 
     originalRequest._retried = true;
 
-    // Bir vaqtda bir nechta so'rov 401 olsa ham, refresh faqat BITTA marta
-    // chaqirilishi uchun — natijani baham ko'ramiz
     if (!refreshPromise) {
       refreshPromise = refreshAccessToken().finally(() => {
         refreshPromise = null;
