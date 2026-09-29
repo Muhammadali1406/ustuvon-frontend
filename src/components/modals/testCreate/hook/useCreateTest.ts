@@ -3,6 +3,11 @@ import { api } from "@/request/api";
 import { links } from "@/request/links";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import {
+  type Question,
+  type Taxamony,
+  type TestFormValues,
+} from "@/widgets/test/hook/test-types";
 import type { AiState } from "../ui/create-test-modal";
 import { createEmptyQuestion } from "@/widgets/test/ui/question-editor";
 // import { mockSubjects } from "@/widgets/subject";
