@@ -47,10 +47,17 @@ export default function TestRules() {
 
         {/* Player card */}
         <div className="h-fit space-y-4 rounded-xl border border-black/8 bg-white p-5 lg:sticky lg:top-24">
-          <div>
-            <input type="checkbox" onChange={() => setTruthRule(!truthRule)} />
-            <p>Test qoidalari bilan tanishib chiqdim</p>
-          </div>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={truthRule}
+              onChange={() => setTruthRule(!truthRule)}
+              className="cursor-pointer"
+            />
+            <span className="text-sm font-medium text-slate-700">
+              Test qoidalari bilan tanishib chiqdim
+            </span>
+          </label>
           <div className="border-t border-black/5 pt-4">
             <button
               type="button"
