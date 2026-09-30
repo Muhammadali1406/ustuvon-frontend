@@ -37,7 +37,6 @@ interface UploadJobResponse {
 export interface TestMeta {
   title: string;
   subjectId: number;
-  topicId: number;
   format: TestFormValues["format"] | "";
   durationMinutes: number;
 }
@@ -45,7 +44,6 @@ export interface TestMeta {
 const emptyMeta: TestMeta = {
   title: "",
   subjectId: 0,
-  topicId: 0,
   format: "",
   durationMinutes: 60,
 };
@@ -131,7 +129,7 @@ export function useCreateTest({ onClose, refetch }: CreateTestHookProps) {
     mutationFn: ({ file, type }: { file: File; type: string }) => {
       const formData = new FormData();
       formData.append("source_file", file);
-      formData.append("topic", String(meta.topicId));
+      formData.append("topic", String(meta.subjectId));
       formData.append("test_type", type);
       return api.post<UploadJobResponse>(links.aiParser.jobUpload, formData);
     },
@@ -195,10 +193,6 @@ export function useCreateTest({ onClose, refetch }: CreateTestHookProps) {
   });
 
   const handleFileSelected = (file: File) => {
-    if (!meta.format || !meta.subjectId || !meta.topicId) {
-      toast.error("Avval kategoriya, fan va mavzuni tanlang.");
-      return;
-    }
     if (file.size > MAX_FILE_SIZE_BYTES) {
       toast.error(
         `Fayl hajmi ${MAX_FILE_SIZE_BYTES / (1024 * 1024)} MB dan oshmasligi kerak (yuklangan fayl: ${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
