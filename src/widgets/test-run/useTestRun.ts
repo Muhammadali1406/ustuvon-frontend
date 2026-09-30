@@ -54,7 +54,7 @@ export function useTestRun({
     mutationFn: () => api.post(links.exams.examinationStart(testId), {}),
     onSuccess: () => {
       setPhase("running");
-      setSecondsLeft(testRun?.duration_time ?? 0);
+      setSecondsLeft((testRun?.duration_time ?? 0) * 60);
     },
   });
 

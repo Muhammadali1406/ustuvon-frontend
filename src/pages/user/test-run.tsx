@@ -70,7 +70,7 @@ export default function TestRun() {
         <h1 className="mt-4 text-2xl font-semibold text-slate-900">{testRun.title}</h1>
         <div className="mt-4 flex items-center gap-2 text-sm text-slate-500">
           <Clock size={16} />
-          <span>{formatTime(testRun.duration_time)}</span>
+          <span>{formatTime(testRun.duration_time * 60)}</span>
           <span className="text-slate-300">•</span>
           <span>{testRun.questions.length} ta savol</span>
         </div>
@@ -205,8 +205,8 @@ export default function TestRun() {
 
         <button
           onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="rounded-xl bg-[#0B8E0F] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#097a0c] disabled:opacity-60"
+          disabled={isSubmitting || answeredCount < totalQuestions}
+          className="rounded-xl bg-[#0B8E0F] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#097a0c] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Yuborilmoqda..." : "Topshirish"}
         </button>

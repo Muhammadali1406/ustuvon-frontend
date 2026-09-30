@@ -15,7 +15,7 @@ export interface ExamQuestion {
 export interface ExamDetail {
   id: string;
   title: string;
-  duration_time: number; // sekundlarda
+  duration_time: number; // daaaaqiqaaaa blyaaaaat
   transition_assessment: number;
   test_type: string;
   level: string;
