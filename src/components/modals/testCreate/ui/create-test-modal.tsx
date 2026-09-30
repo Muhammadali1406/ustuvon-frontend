@@ -64,6 +64,7 @@ export function CreateTestModal({ isOpen, onClose,refetch }: CreateTestModalProp
 
         {/* Umumiy maydonlar */}
         <Generalfields
+          tab={tab}
           taxamonyTree={taxamonyTree}
           meta={meta}
           setMeta={setMeta}

@@ -54,12 +54,18 @@ export interface TestFormValues {
   questions: Question[];
 }
 
+export type TaxamonyTopic = {
+  id: number;
+  title: string;
+  order: number;
+};
+
 type Module = {
   id: number;
   title: string;
   description: string;
+  topics: TaxamonyTopic[];
 };
-
 export type TaxamonySubject = {
   id: number;
   title: string;
