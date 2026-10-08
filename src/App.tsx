@@ -20,12 +20,14 @@ import UserProfile from "./pages/user/user-profile";
 import TestRun from "./pages/user/test-run";
 import UserResults from "./pages/user/user-result";
 import NotFound from "./pages/not-found";
+import DemoPage from "./pages/demo/demo-page";
 
 function App() {
   return (
     <Routes>
       {/* Ommaviy */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/demo" element={<DemoPage />} />
 
       {/* Faqat kirmagan foydalanuvchi uchun — kirgan bo'lsa o'z bosh
           sahifasiga qaytariladi (GuestRoute) */}
