@@ -35,9 +35,11 @@ export default function LoginPage() {
         className="w-full max-w-sm rounded-2xl border border-black/10 bg-white p-8 shadow-sm"
       >
         <div className="text-center">
-          <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-md bg-[#0EBE15] text-sm font-bold text-[#101826]">
-            U
-          </span>
+          <img
+            src="/b-logo.png"
+            alt="Ustuvon logo"
+            className="mx-auto h-10 w-10 rounded-md object-contain"
+          />
           <h1 className="mt-4 text-lg font-semibold text-slate-900">
             Kirish
           </h1>

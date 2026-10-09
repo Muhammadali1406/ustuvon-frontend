@@ -48,9 +48,11 @@ export function SiteFooter() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#0EBE15] u-font-display text-xs font-bold text-[var(--ink)]">
-                U
-              </span>
+              <img
+                src="/b-logo.png"
+                alt="Ustuvon logo"
+                className="h-7 w-7 rounded-md object-contain"
+              />
               <span className="u-font-display text-base font-semibold text-[var(--ink)]">
                 Ustuvon
               </span>

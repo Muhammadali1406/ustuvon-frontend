@@ -343,9 +343,11 @@ function EcosystemLoop() {
         })}
 
         <div className="absolute inset-0 flex flex-col items-center justify-center px-[22%] text-center">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[#0EBE15] u-font-display text-sm font-bold text-[var(--ink)]">
-            U
-          </span>
+          <img
+            src="/b-logo.png"
+            alt="Ustuvon logo"
+            className="h-9 w-9 rounded-md object-contain"
+          />
           <p className="mt-2 u-font-display text-sm font-bold text-[var(--ink)]">
             USTUVON
           </p>

@@ -102,14 +102,14 @@ export function Hero() {
           <div className="mt-10 flex items-center gap-6 border-t border-[var(--ink)]/10 pt-6 text-sm text-[var(--ink)]/70">
             <div>
               <span className="u-font-mono text-lg font-semibold text-[var(--ink)]">
-                12,400+
+                17
               </span>{" "}
               foydalanuvchi
             </div>
             <div className="h-8 w-px bg-[var(--ink)]/10" />
             <div>
               <span className="u-font-mono text-lg font-semibold text-[var(--ink)]">
-                68,000+
+                350+
               </span>{" "}
               ishlangan test
             </div>

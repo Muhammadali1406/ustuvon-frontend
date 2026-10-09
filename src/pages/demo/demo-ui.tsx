@@ -288,9 +288,11 @@ export function CertificateCard({ verified }: { verified?: boolean }) {
     <div className="relative rounded-xl border border-[var(--ink)]/10 bg-white p-5 shadow-lg shadow-[var(--ink)]/5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#0EBE15] u-font-display text-[11px] font-bold text-[var(--ink)]">
-            U
-          </span>
+          <img
+            src="/b-logo.png"
+            alt="Ustuvon logo"
+            className="h-6 w-6 rounded-md object-contain"
+          />
           <span className="u-font-display text-sm font-semibold text-[var(--ink)]">
             Ustuvon
           </span>

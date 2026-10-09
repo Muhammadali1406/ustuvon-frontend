@@ -33,9 +33,11 @@ const NAV_ITEMS: NavItem[] = [
 function Logo() {
   return (
     <Link to="/app" className="flex items-center gap-2">
-      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0EBE15] text-sm font-bold text-[#101826]">
-        U
-      </span>
+      <img
+        src="/b-logo.png"
+        alt="Ustuvon logo"
+        className="h-8 w-8 rounded-md object-contain"
+      />
       <span className="text-lg font-semibold text-slate-900">Ustuvon</span>
     </Link>
   );
