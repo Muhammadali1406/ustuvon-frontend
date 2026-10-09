@@ -1,7 +1,7 @@
 import { Reveal } from "./reveal";
 const STATS = [
-  { value: "12,400+", label: "Foydalanuvchi" },
-  { value: "68,000+", label: "Ishlangan test" },
+  { value: "17", label: "Foydalanuvchi" },
+  { value: "350+", label: "Ishlangan test" },
   { value: "6+", label: "Fan yo'nalishi" },
   { value: "4.8/5", label: "O'rtacha baho" },
 ];

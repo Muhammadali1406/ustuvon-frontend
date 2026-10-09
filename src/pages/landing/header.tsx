@@ -5,9 +5,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-[var(--ink)]/8 bg-[var(--paper)]/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0EBE15] u-font-display text-sm font-bold text-[var(--ink)]">
-            U
-          </span>
+          <img
+            src="/b-logo.png"
+            alt="Ustuvon logo"
+            className="h-8 w-8 rounded-md object-contain"
+          />
           <span className="u-font-display text-lg font-semibold text-[var(--ink)]">
             Ustuvon
           </span>
@@ -58,9 +60,11 @@ export function UserHeader() {
     <header className="sticky top-0 z-50 border-b border-[var(--ink)]/8 bg-[var(--paper)]/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#0EBE15] u-font-display text-sm font-bold text-[var(--ink)]">
-            U
-          </span>
+          <img
+            src="/b-logo.png"
+            alt="Ustuvon logo"
+            className="h-8 w-8 rounded-md object-contain"
+          />
           <span className="u-font-display text-lg font-semibold text-[var(--ink)]">
             Ustuvon
           </span>
