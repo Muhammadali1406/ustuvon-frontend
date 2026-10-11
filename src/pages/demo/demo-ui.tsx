@@ -1,6 +1,7 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { Check, Play } from "lucide-react";
 import { Reveal } from "../landing/reveal";
+import { scrollToSection } from "./demo-hooks";
 
 /* ------------------------------------------------------------------ */
 /* Bo'lim qobig'i                                                      */
@@ -350,6 +351,67 @@ export function CertificateCard({ verified }: { verified?: boolean }) {
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Kichik bo'lim sarlavhasi (1.1, 1.2 ...) va ichki navigatsiya         */
+/* ------------------------------------------------------------------ */
+
+export function SubHead({
+  id,
+  no,
+  title,
+  text,
+  first = false,
+}: {
+  id: string;
+  no: string;
+  title: string;
+  text?: string;
+  first?: boolean;
+}) {
+  return (
+    <div id={id} className={`mb-6 scroll-mt-[7.5rem] ${first ? "" : "mt-20"}`}>
+      <Reveal>
+        <div className="flex items-center gap-3">
+          <span className="rounded-md border border-[#0EBE15]/40 bg-[#0EBE15]/10 px-2 py-1 u-font-mono text-xs font-semibold text-[#0EBE15]">
+            {no}
+          </span>
+          <h3 className="u-font-display text-xl font-bold text-[var(--ink)] md:text-2xl">
+            {title}
+          </h3>
+          <span className="h-px flex-1 bg-[var(--ink)]/10" />
+        </div>
+        {text && (
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink)]/60">
+            {text}
+          </p>
+        )}
+      </Reveal>
+    </div>
+  );
+}
+
+export function SubNav({
+  items,
+}: {
+  items: { id: string; no: string; label: string }[];
+}) {
+  return (
+    <div className="-mt-4 mb-12 flex flex-wrap gap-2">
+      {items.map((i) => (
+        <button
+          key={i.id}
+          type="button"
+          onClick={() => scrollToSection(i.id)}
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--ink)]/12 bg-white/70 px-3 py-1.5 text-xs font-semibold text-[var(--ink)]/70 transition-colors hover:border-[#0EBE15] hover:text-[#0EBE15]"
+        >
+          <span className="u-font-mono text-[#0EBE15]">{i.no}</span>
+          {i.label}
+        </button>
+      ))}
     </div>
   );
 }

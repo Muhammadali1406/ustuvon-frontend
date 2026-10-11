@@ -28,27 +28,42 @@ import {
 /* ------------------------------------------------------------------ */
 
 export const SECTIONS = [
-  { id: "boshi", no: "00", label: "Boshi" },
-  { id: "muammo", no: "01", label: "Muammo" },
-  { id: "yechim", no: "02", label: "Yechim" },
-  { id: "ai-generator", no: "03", label: "AI Generator" },
-  { id: "arxitektura", no: "04", label: "Arxitektura" },
-  { id: "jamoa", no: "05", label: "Jamoa" },
-  { id: "yol-xaritasi", no: "06", label: "Yo'l xaritasi" },
-  { id: "kurslar-ai", no: "07", label: "Kurslar va AI" },
-  { id: "sertifikat-global", no: "08", label: "Sertifikat va global" },
-  { id: "ekotizim", no: "09", label: "Ekotizim" },
+  { id: "muammo-yechim", no: "01", label: "Muammo → Yechim" },
+  { id: "jamoa", no: "02", label: "Jamoa" },
+  { id: "nega-biz", no: "03", label: "Nega aynan biz" },
+  { id: "yol-xaritasi", no: "04", label: "Yo'l xaritasi" },
+  { id: "amalga-oshirish", no: "05", label: "Amalga oshirish" },
+  { id: "demo", no: "06", label: "Demo" },
 ] as const;
 
 /* ------------------------------------------------------------------ */
 /* Loyiha havolalari — bo'sh qoldirilgan havola ko'rsatilmaydi         */
 /* ------------------------------------------------------------------ */
 
-export const PROJECT_LINKS: { label: string; href: string }[] = [
-  { label: "Website", href: "https://ustuvon.uz" },
-  { label: "GitHub", href: "" },
-  { label: "Figma", href: "" },
+export const PROJECT_LINKS: {
+  label: string;
+  note: string;
+  href: string;
+  external?: boolean;
+}[] = [
+  { label: "Website", note: "ustuvon.uz", href: "https://ustuvon.uz", external: true },
+  { label: "Demo", note: "Demo-video (6.1)", href: "#demo-video" },
+  // GitHub va Figma havolalarini shu yerga qo'shing — bo'sh qoldirilgani ko'rsatilmaydi.
+  { label: "GitHub", note: "Source code", href: "", external: true },
+  { label: "Figma", note: "UI/UX dizayn", href: "", external: true },
 ];
+
+/* ------------------------------------------------------------------ */
+/* 06 — Demo-video                                                     */
+/* ------------------------------------------------------------------ */
+
+export const DEMO_VIDEO = {
+  id: "l9hAV0ci1sk",
+  watchUrl: "https://youtu.be/l9hAV0ci1sk",
+  title: "Ustuvon — demo-video",
+  description:
+    "This video explains how our platform is made, what its purpose is, and what problem we are solving.",
+};
 
 /* ------------------------------------------------------------------ */
 /* Hero                                                                */
@@ -82,12 +97,6 @@ export const CHAIN = [
   "Professional rivojlanish",
 ];
 
-export const FACTS = [
-  { value: 3, label: "Boshlang'ich til", note: "O'zbek · Rus · Ingliz" },
-  { value: 4, label: "Bosqichli yo'l xaritasi", note: "Idea → Launched" },
-  { value: 10, label: "Bosqichli AI pipeline", note: "Upload → Publish" },
-  { value: 12, label: "Jamoa roli", note: "Texnik · ta'lim · biznes" },
-];
 
 /* ------------------------------------------------------------------ */
 /* 01 — Muammo                                                         */
@@ -314,82 +323,128 @@ export const TEAM_ROLES: {
   role: string;
   duty: string;
   group: TeamGroup;
+  skills: string[];
 }[] = [
   {
     icon: Compass,
     role: "Project Manager / Founder",
     duty: "Loyiha strategiyasi, boshqaruv va rivojlantirish",
     group: "Biznes",
+    skills: ["Strategiya", "Boshqaruv", "Mahsulot rivoji"],
   },
   {
     icon: Monitor,
     role: "Frontend Developer",
     duty: "Foydalanuvchi interfeysi va web platforma",
     group: "Texnik",
+    skills: ["React", "TypeScript", "Tailwind CSS", "React Router", "i18n"],
   },
   {
     icon: Server,
     role: "Backend Developer",
     duty: "Server, API va biznes logika",
     group: "Texnik",
+    skills: ["Node.js", "Express.js", "REST API", "Authentication"],
   },
   {
     icon: Layers,
     role: "Full-Stack Developer",
     duty: "Frontend va backend integratsiyasi",
     group: "Texnik",
+    skills: ["Frontend + Backend", "API integratsiyasi"],
   },
   {
     icon: PenTool,
     role: "UI/UX Designer",
     duty: "Platforma dizayni va foydalanuvchi tajribasi",
     group: "Texnik",
+    skills: ["Figma", "UI/UX dizayn", "Prototiplash"],
   },
   {
     icon: Sparkles,
     role: "AI Engineer",
     duty: "AI Test Generator va AI funksiyalar",
     group: "Texnik",
+    skills: ["LLM", "OCR", "Document parsing", "Structured output"],
   },
   {
     icon: ShieldCheck,
     role: "QA Engineer",
     duty: "Testlash va sifat nazorati",
     group: "Texnik",
+    skills: ["Testlash", "Sifat nazorati"],
   },
   {
     icon: Cloud,
     role: "DevOps Engineer",
     duty: "Server, deployment, monitoring",
     group: "Texnik",
+    skills: ["Cloud", "CI/CD", "Monitoring", "Backup"],
   },
   {
     icon: GraduationCap,
     role: "Education Expert",
     duty: "Ta'lim metodikasi va kurslar",
     group: "Ta'limiy",
+    skills: ["Ta'lim metodikasi", "Kurs ssenariysi"],
   },
   {
     icon: ClipboardCheck,
     role: "Test Specialist",
     duty: "Professional test va imtihon savollarini ishlab chiqish",
     group: "Ta'limiy",
+    skills: ["Imtihon savollari", "Test formatlari"],
   },
   {
     icon: BookOpen,
     role: "Content Team",
     duty: "Kurslar va o'quv materiallarini tayyorlash",
     group: "Ta'limiy",
+    skills: ["O'quv materiallari", "Kurs kontenti"],
   },
   {
     icon: Megaphone,
     role: "Marketing Team",
     duty: "Platformani targ'ib qilish va foydalanuvchilarni jalb qilish",
     group: "Biznes",
+    skills: ["Targ'ibot", "Foydalanuvchilarni jalb qilish", "Analytics"],
   },
 ];
 
-export const PILLARS = ["Ta'lim", "Baholash", "AI", "Biznes"];
+export const PILLAR_MAP: {
+  name: string;
+  covers: string;
+  roles: string[];
+}[] = [
+  {
+    name: "Ta'lim",
+    covers: "Ta'lim metodikasi, kurslar va o'quv materiallari",
+    roles: ["Education Expert", "Content Team"],
+  },
+  {
+    name: "Baholash",
+    covers: "Professional test va imtihon savollari, sifat nazorati",
+    roles: ["Test Specialist", "QA Engineer"],
+  },
+  {
+    name: "AI",
+    covers: "AI Test Generator va AI funksiyalar",
+    roles: ["AI Engineer"],
+  },
+  {
+    name: "Biznes",
+    covers: "Strategiya, boshqaruv va foydalanuvchilarni jalb qilish",
+    roles: ["Project Manager / Founder", "Marketing Team"],
+  },
+];
+
+export const BUILDERS = [
+  "Frontend Developer",
+  "Backend Developer",
+  "Full-Stack Developer",
+  "UI/UX Designer",
+  "DevOps Engineer",
+];
 
 export const TOOLS = [
   { name: "GitHub", use: "Source code va jamoaviy development" },
@@ -583,4 +638,75 @@ export const ADVANTAGE = [
   "Learning Platform",
   "AI Analytics",
   "Certification",
+];
+
+/* ------------------------------------------------------------------ */
+/* 05 — Arxitektura qatlamlari va amalga oshirish bosqichlari          */
+/* ------------------------------------------------------------------ */
+
+export const ARCH_DETAILS: Record<string, { text: string; tech: string[] }> = {
+  Frontend: {
+    text: "Foydalanuvchi va administrator ko'radigan barcha interfeys.",
+    tech: ["React", "Vite", "TypeScript", "Tailwind CSS", "React Router", "i18n"],
+  },
+  "Backend API": {
+    text: "Server, API va biznes logika.",
+    tech: ["Node.js", "Express.js", "REST API", "Rate limiting", "Secure API"],
+  },
+  Authentication: {
+    text: "Kim kira oladi va nimaga huquqi bor.",
+    tech: ["JWT / OAuth", "Role-Based Access Control", "Audit logs"],
+  },
+  "Test Engine": {
+    text: "Tizimning markaziy qismi: imtihonni boshidan oxirigacha boshqaradi.",
+    tech: [
+      "Savollarni yuklash",
+      "Vaqt nazorati",
+      "Javoblarni saqlash",
+      "Natijani hisoblash",
+    ],
+  },
+  "Question Bank": {
+    text: "Professional savollar bazasi, AI Test Generator bilan to'ldiriladi.",
+    tech: ["Professional Question Bank", "AI Test Generator"],
+  },
+  Database: {
+    text: "Boshlang'ich bosqichda; kelajakda katta hajm uchun kengaytiriladi.",
+    tech: ["MongoDB yoki PostgreSQL", "Database hosting", "Backup"],
+  },
+  Analytics: {
+    text: "Natijalar, statistika va rivojlanish tahlili.",
+    tech: ["Imtihon statistikasi", "Natijalar tarixi", "Analytics platformalar"],
+  },
+  "Certificate System": {
+    text: "Tekshiriladigan sertifikatlar.",
+    tech: ["Unique Certificate ID", "QR verification", "Verification sahifasi"],
+  },
+};
+
+export const PHASES = [
+  {
+    no: 1,
+    name: "Professional test platformasi",
+    lead: "Birinchi navbatda USTUVONning assessment qismi ishlab chiqiladi.",
+    parts: [
+      "Test Engine",
+      "Question Bank",
+      "Analytics",
+      "Certificate System",
+      "AI Test Generator",
+    ],
+  },
+  {
+    no: 2,
+    name: "Online kurslar",
+    lead: "Test platformasi barqaror ishlagach, online ta'lim qismi qo'shiladi.",
+    parts: ["Kurslar", "Ko'p tilli kontent", "AI Learning System"],
+  },
+  {
+    no: 3,
+    name: "Global platformaga aylanish",
+    lead: "Platforma dastlab O'zbekiston bozorida sinovdan o'tkaziladi, keyin bosqichma-bosqich kengayadi.",
+    parts: ["Xalqaro bozorlar", "Xalqaro sertifikatlash", "Yuqori yuklama"],
+  },
 ];

@@ -2,12 +2,27 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { SECTIONS } from "./demo-data";
 import { scrollToSection } from "./demo-hooks";
-import { DemoHero, FactsBand, ProblemSection, SolutionSection, AiGeneratorSection } from "./sections-intro";
-import { ArchitectureSection, TeamSection, RoadmapSection } from "./sections-core";
-import { LearnSection, CertGlobalSection, EcosystemSection, DemoFooter } from "./sections-future";
+import { DemoHero } from "./demo-hero";
+import { ProblemSolutionSection } from "./sec1-problem-solution";
+import { TeamSection } from "./sec2-team";
+import { WhyUsSection } from "./sec3-why-us";
+import { RoadmapSection } from "./sec4-roadmap";
+import { ImplementationSection } from "./sec5-implementation";
+import { DemoSection } from "./sec6-demo";
+
+function DemoFooter() {
+  return (
+    <footer className="border-t border-[var(--ink)]/10 bg-white">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-[var(--ink)]/40 sm:flex-row md:px-8">
+        <span>© {new Date().getFullYear()} Ustuvon. Barcha huquqlar himoyalangan.</span>
+        <span className="u-font-mono">← → tugmalari bilan bo'limlar orasida yuring</span>
+      </div>
+    </footer>
+  );
+}
 
 export default function DemoPage() {
-  const [active, setActive] = useState<string>(SECTIONS[0].id);
+  const [active, setActive] = useState<string>("");
   const barRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -21,12 +36,14 @@ export default function DemoPage() {
 
   // Scroll-spy
   useEffect(() => {
-    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      (el): el is HTMLElement => el !== null,
-    );
+    const els = ["boshi", ...SECTIONS.map((s) => s.id)]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
+        for (const e of entries) {
+          if (e.isIntersecting) setActive(e.target.id === "boshi" ? "" : e.target.id);
+        }
       },
       { rootMargin: "-40% 0px -55% 0px" },
     );
@@ -78,9 +95,9 @@ export default function DemoPage() {
       if (e.key === "ArrowRight" && i < SECTIONS.length - 1) {
         e.preventDefault();
         scrollToSection(SECTIONS[i + 1].id);
-      } else if (e.key === "ArrowLeft" && i > 0) {
+      } else if (e.key === "ArrowLeft" && i >= 0) {
         e.preventDefault();
-        scrollToSection(SECTIONS[i - 1].id);
+        scrollToSection(i > 0 ? SECTIONS[i - 1].id : "boshi");
       }
     };
     window.addEventListener("keydown", onKey);
@@ -117,7 +134,7 @@ export default function DemoPage() {
             </Link>
             <Link
               to="/register"
-              className="rounded-md bg-[#0EBE15]/80 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#03ba09] md:px-4"
+              className="whitespace-nowrap rounded-md bg-[#0EBE15]/80 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#03ba09] sm:text-sm md:px-4"
             >
               Ro'yxatdan o'tish
             </Link>
@@ -164,17 +181,13 @@ export default function DemoPage() {
       <main>
         <div id="boshi" className="scroll-mt-[6.75rem]">
           <DemoHero />
-          <FactsBand />
         </div>
-        <ProblemSection />
-        <SolutionSection />
-        <AiGeneratorSection />
-        <ArchitectureSection />
+        <ProblemSolutionSection />
         <TeamSection />
+        <WhyUsSection />
         <RoadmapSection />
-        <LearnSection />
-        <CertGlobalSection />
-        <EcosystemSection />
+        <ImplementationSection />
+        <DemoSection />
       </main>
       <DemoFooter />
 
