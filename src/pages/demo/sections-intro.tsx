@@ -667,7 +667,7 @@ export function SolutionSection() {
             <span className="mr-2 rounded-full bg-[var(--brand)]/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--brand)]">
               Kelajakda
             </span>
-            Anti-cheating va proctoring texnologiyalari qo'shiladi.
+            Anti-cheating va proctoring texnologiyalari qo'shish rejamiz bor.
           </p>
         </div>
       </Reveal>

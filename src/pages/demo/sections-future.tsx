@@ -29,7 +29,7 @@ import {
 } from "./demo-ui";
 
 /* ================================================================== */
-/* 07 — Kurslar va AI                                                  */
+/* 07 - Kurslar va AI                                                  */
 /* ================================================================== */
 
 function DubbingCard() {
@@ -133,7 +133,7 @@ export function LearnSection() {
           >
             <Eyebrow>AI Learning System</Eyebrow>
             <p className="mt-3 u-font-display text-lg font-semibold text-[var(--ink)]">
-              Matematika testi — natija
+              Matematika testi - natija
             </p>
             <div className="mt-4">
               <TopicBars scores={TOPIC_SCORES} start={inView} />
@@ -177,7 +177,7 @@ export function LearnSection() {
 }
 
 /* ================================================================== */
-/* 08 — Sertifikat va global                                           */
+/* 08 - Sertifikat va global                                           */
 /* ================================================================== */
 
 function CertificateDemo() {
@@ -293,7 +293,7 @@ export function CertGlobalSection() {
 }
 
 /* ================================================================== */
-/* 09 — Ekotizim                                                       */
+/* 09 - Ekotizim                                                       */
 /* ================================================================== */
 
 function EcosystemLoop() {
@@ -392,7 +392,7 @@ export function EcosystemSection() {
       <SectionHead
         no="09"
         eyebrow="Yakuniy konsepsiya"
-        title="Kurs platformasi ham, test sayti ham emas — to'liq ekotizim"
+        title="Kurs platformasi ham, test sayti ham emas - to'liq ekotizim"
         intro="USTUVON oddiy online kurs platformasi yoki oddiy test sayti bo'lishni maqsad qilmaydi. U o'rganishdan kasbiy rivojlanishgacha bo'lgan yo'lni yagona tizimda birlashtiradi."
       />
       <EcosystemLoop />
@@ -416,7 +416,7 @@ export function EcosystemSection() {
       <Reveal className="mx-auto mt-20 max-w-3xl text-center">
         <h2 className="u-font-display text-3xl font-bold text-[var(--ink)] md:text-4xl">
           Ta'limning <span className="text-[#0EBE15]">yagona tizimi</span>ni
-          birga quramiz
+          qurdik
         </h2>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link

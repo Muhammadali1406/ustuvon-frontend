@@ -71,8 +71,6 @@ export const LANGUAGES = [
 export const MARKET_PATH = [
   "O'zbekiston",
   "Markaziy Osiyo",
-  "MDH",
-  "Global bozor",
 ];
 
 export const CHAIN = [
@@ -101,10 +99,6 @@ export const PROBLEMS = [
     text: "O'quvchilar uchun yagona ta'lim va baholash tizimi mavjud emas.",
   },
   {
-    title: "Real imtihon muhiti yo'q",
-    text: "Ko'plab online testlar oddiy savol-javob shaklida — real imtihon muhitini to'liq taqlid qilmaydi.",
-  },
-  {
     title: "Yuqori xarajat",
     text: "Ta'lim markazlari professional test tizimini yaratishda katta vaqt va mablag' sarflaydi.",
   },
@@ -115,10 +109,6 @@ export const PROBLEMS = [
   {
     title: "Format xilma-xilligi",
     text: "Turli imtihonlar uchun alohida format va tizim yaratishga to'g'ri keladi.",
-  },
-  {
-    title: "Sayoz tahlil",
-    text: "O'quvchining bilim darajasi va rivojlanishini chuqur tahlil qilish imkoniyati cheklangan.",
   },
   {
     title: "Uzilgan jarayon",
@@ -217,7 +207,6 @@ export const ARCH_LAYERS = [
   "Backend API",
   "Authentication",
   "Test Engine",
-  "Question Bank",
   "Database",
   "Analytics",
   "Certificate System",
@@ -590,7 +579,6 @@ export const ECOSYSTEM = [
 
 export const ADVANTAGE = [
   "AI Test Generator",
-  "Professional Question Bank",
   "Real Exam Environment",
   "Learning Platform",
   "AI Analytics",
