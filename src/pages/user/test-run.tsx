@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Clock, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { SUBJECT_CATALOG } from "@/widgets/user-subject/hook/subject-data";
 import { useTestRun } from "@/widgets/test-run/useTestRun";
+import { useAiReview } from "@/widgets/test-run/useAiReview";
+import { AiReviewSection } from "@/widgets/test-run/ai-review-panel";
 
 function formatTime(totalSeconds: number) {
   const h = Math.floor(totalSeconds / 3600);
@@ -37,6 +39,9 @@ export default function TestRun() {
     handleSubmit,
     goToResults,
   } = useTestRun({ testId: testId!, subjectId: subjectId! });
+
+  // AI tahlil: topshirilgan javoblar (answers) bilan bir xil obyekt yuboriladi.
+  const aiReview = useAiReview({ examId: testId!, answers });
 
   const backLink = subject ? `/app/subjects/${subject.id}` : "/app/subjects";
 
@@ -90,8 +95,13 @@ export default function TestRun() {
   }
 
   if (phase === "finished" && result) {
+    const showAiReport = aiReview.status === "done";
     return (
-      <div className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center text-center">
+      <div
+        className={`mx-auto flex min-h-[60vh] flex-col items-center text-center ${
+          showAiReport ? "max-w-2xl justify-start py-6" : "max-w-lg justify-center"
+        }`}
+      >
         {result.is_passed ? (
           <CheckCircle2 className="text-[#0B8E0F]" size={48} />
         ) : (
@@ -122,6 +132,8 @@ export default function TestRun() {
             <p className="text-xs text-slate-500">Jami savol</p>
           </div>
         </div>
+
+        <AiReviewSection review={aiReview} />
 
         <button
           onClick={goToResults}
