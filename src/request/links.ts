@@ -59,6 +59,11 @@ export const links = {
     resultDetail: (id: number | string) => `${API_BASE}/exams/results/${id}/`,
   },
 
+  aiReviewer: {
+    reviews: `${API_BASE}/ai-reviewer/reviews/`,
+    reviewDetail: (id: string) => `${API_BASE}/ai-reviewer/reviews/${id}/`,
+  },
+
   certificates: {
     list: `${API_BASE}/certificates/`,
     detail: (id: string) => `${API_BASE}/certificates/${id}/`,
